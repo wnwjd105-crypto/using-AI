@@ -10,7 +10,7 @@
 ## 🔗 접속 링크 & QR Code
 - **웹앱 URL:** [접속하기](https://url.kr/lqlkr2)
 
-![MT 안내 QR](https://lh3.googleusercontent.com/d/1YoFoF_VUGGHFM2yjdxZ1Hbm5IpUy9nbu)
+![MT 안내 QR](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://url.kr/lqlkr2)
 
 ## 🛠️ 기술 스택
 - Google Apps Script (GAS)
