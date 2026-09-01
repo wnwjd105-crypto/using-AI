@@ -8,9 +8,9 @@
 - **중복 제출 방지 및 결과 집계:** 스프레드시트를 통한 빠른 메뉴 확정
 
 ## 🔗 접속 링크 & QR Code
-- **웹앱 URL:** [투표 참여하기](여기에_GAS_배포_URL_입력)
+- **웹앱 URL:** [투표 참여하기](https://script.google.com/macros/s/AKfycbxtqFhgkCkFyTrTwf9UsjilVKgcQTVet8OaPdb_nSOmRadysS8QuW0W1tuSpBeeTQww/exec)
 
-![식사 투표 QR](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=여기에_GAS_배포_URL_입력)
+![식사 투표 QR](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://script.google.com/macros/s/AKfycbxtqFhgkCkFyTrTwf9UsjilVKgcQTVet8OaPdb_nSOmRadysS8QuW0W1tuSpBeeTQww/exec)
 
 ## 🛠️ 기술 스택
 - Google Apps Script (GAS)
