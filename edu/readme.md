@@ -9,9 +9,9 @@ Markdown
 - **자동 데이터화:** 설문 응답을 구글 스프레드시트에 실시간 기록
 
 ## 🔗 접속 링크 & QR Code
-- **웹앱 URL:** [설문 참여하기](여기에_GAS_배포_URL_입력)
+- **웹앱 URL:** [설문 참여하기](https://script.google.com/macros/s/AKfycbxtqFhgkCkFyTrTwf9UsjilVKgcQTVet8OaPdb_nSOmRadysS8QuW0W1tuSpBeeTQww/exec)
 
-![교육 설문 QR](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=여기에_GAS_배포_URL_입력)
+![교육 설문 QR](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://script.google.com/macros/s/AKfycbxtqFhgkCkFyTrTwf9UsjilVKgcQTVet8OaPdb_nSOmRadysS8QuW0W1tuSpBeeTQww/exec)
 
 ## 🛠️ 기술 스택
 - Google Apps Script (GAS)
