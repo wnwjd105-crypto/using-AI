@@ -9,9 +9,9 @@ Markdown
 - **위치/장소 추천:** 주요 관광지 및 주변 편의시설 안내
 
 ## 🔗 접속 링크 & QR Code
-- **웹앱 URL:** [アクセスする](여기에_GAS_배포_URL_입력)
+- **웹앱 URL:** [アクセスする](https://script.google.com/macros/s/AKfycbydEZXj824S-iPqVqZv-PNTEdNJZDA3kxOZ7GAPylwsQgjLaNTCmX_jXVTXrgRF5Fl-tA/exec)
 
-![여행 가이드 QR](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=여기에_GAS_배포_URL_입력)
+![여행 가이드 QR](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://script.google.com/macros/s/AKfycbydEZXj824S-iPqVqZv-PNTEdNJZDA3kxOZ7GAPylwsQgjLaNTCmX_jXVTXrgRF5Fl-tA/exec)
 
 ## 🛠️ 기술 스택
 - Google Apps Script (GAS)
