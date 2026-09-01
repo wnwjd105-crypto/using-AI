@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>교육자료신청</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      background-color: #ffffff;
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 440px;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #333333;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 6px;
+    }
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+      border-color: #4d90fe;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #1a73e8;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #1557b0;
+    }
+    button:disabled {
+      background-color: #a0c3ff;
+      cursor: not-allowed;
+    }
+    /* 완료 메시지 영역 */
+    #completeView {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+    #completeView h2 {
+      font-size: 18px;
+      color: #2b8a3e;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div id="formView">
+      <h1>교육자료신청</h1>
+      <form id="applyForm" onsubmit="handleFormSubmit(event)">
+        <div class="form-group">
+          <label for="name">이름</label>
+          <input type="text" id="name" required placeholder="이름을 입력하세요">
+        </div>
+        <div class="form-group">
+          <label for="email">이메일</label>
+          <input type="email" id="email" required placeholder="example@email.com">
+        </div>
+        <div class="form-group">
+          <label for="message">교수님께 하고 싶은 말</label>
+          <textarea id="message" placeholder="전달하고 싶은 내용을 입력하세요"></textarea>
+        </div>
+        <button type="submit" id="submitBtn">확인</button>
+      </form>
+    </div>
+
+    <div id="completeView">
+      <h2>오늘 교육 받느라 수고하셨습니다.</h2>
+    </div>
+  </div>
+
+  <script>
+    function handleFormSubmit(event) {
+      event.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = '제출 중...';
+
+      const formData = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        message: document.getElementById('message').value.trim()
+      };
+
+      // GAS 백엔드 함수 호출
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (response.success) {
+            document.getElementById('formView').style.display = 'none';
+            document.getElementById('completeView').style.display = 'block';
+          } else {
+            alert('저장 중 오류가 발생했습니다: ' + response.error);
+            submitBtn.disabled = false;
+            submitBtn.innerText = '확인';
+          }
+        })
+        .withFailureHandler(function(error) {
+          alert('네트워크 또는 시스템 오류: ' + error);
+          submitBtn.disabled = false;
+          submitBtn.innerText = '확인';
+        })
+        .submitData(formData);
+    }
+  </script>
+</body>
+</html>
