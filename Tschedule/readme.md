@@ -12,7 +12,7 @@
 ## 🔗 접속 링크 & QR Code
 - **웹앱 URL:** [일정 입력하기](https://script.google.com/macros/s/AKfycbwzxww4Z2XrVRlrm_jCrs7u6943KnM4Pb86a_iA80zs1MjHvAXfnXGJ37LiUiD23eA7Ew/exec)
 
-![동아리 일정 조율 QR](https://script.google.com/macros/s/AKfycbwzxww4Z2XrVRlrm_jCrs7u6943KnM4Pb86a_iA80zs1MjHvAXfnXGJ37LiUiD23eA7Ew/exec)
+![동아리 일정 조율 QR](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://script.google.com/macros/s/AKfycbwzxww4Z2XrVRlrm_jCrs7u6943KnM4Pb86a_iA80zs1MjHvAXfnXGJ37LiUiD23eA7Ew/exec)
 
 ## 🛠️ 기술 스택
 - Google Apps Script (GAS)
