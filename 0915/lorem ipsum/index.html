@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorem Ipsum 생성기</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .control-group {
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+        .output-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            resize: vertical;
+            background: #fafafa;
+            color: #333;
+            line-height: 1.5;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .toast {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #27ae60;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Lorem Ipsum 생성기</h2>
+        
+        <div class="control-group">
+            <div class="slider-header">
+                <label for="lengthSlider">글자 수 조절</label>
+                <span id="lengthValue">150자</span>
+            </div>
+            <input type="range" id="lengthSlider" min="10" max="5000" value="150" step="1">
+        </div>
+
+        <div class="output-box">
+            <textarea id="resultText" readonly></textarea>
+        </div>
+
+        <button id="copyBtn">클립보드 복사하기</button>
+        <div class="toast" id="toastMsg">클립보드에 복사되었습니다!</div>
+    </div>
+
+    <script>
+        const baseLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ";
+
+        const slider = document.getElementById('lengthSlider');
+        const lengthValue = document.getElementById('lengthValue');
+        const resultText = document.getElementById('resultText');
+        const copyBtn = document.getElementById('copyBtn');
+        const toastMsg = document.getElementById('toastMsg');
+
+        function generateLorem(length) {
+            let text = "";
+            while (text.length < length) {
+                text += baseLorem;
+            }
+            return text.substring(0, length);
+        }
+
+        function updateText() {
+            const length = parseInt(slider.value);
+            lengthValue.innerText = `${length}자`;
+            resultText.value = generateLorem(length);
+        }
+
+        // 초기 실행 (기본 150자)
+        updateText();
+
+        // 슬라이드바 이벤트
+        slider.addEventListener('input', updateText);
+
+        // 복사 버튼 이벤트
+        copyBtn.addEventListener('click', function() {
+            if (!resultText.value) return;
+            navigator.clipboard.writeText(resultText.value).then(() => {
+                toastMsg.style.opacity = '1';
+                setTimeout(() => {
+                    toastMsg.style.opacity = '0';
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>
