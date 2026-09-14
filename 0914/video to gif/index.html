@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video to GIF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gifshot/0.3.2/gifshot.min.js"></script>
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --success: #10b981;
+            --bg-glass: rgba(255, 255, 255, 0.9);
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', 'Apple SD Gothic Neo', sans-serif;
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        header {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .logo-img:hover { transform: scale(1.05); }
+
+        .app-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* 메인 히어로 문구 */
+        .hero-section {
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #4c1d95;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            color: var(--text-sub);
+            font-weight: 500;
+        }
+
+        /* 드래그 앤 드롭 업로드 박스 */
+        .drop-zone {
+            border: 2px dashed #c4b5fd;
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #faf5ff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .drop-zone.dragover {
+            background: #f3e8ff;
+            border-color: var(--primary);
+            transform: scale(1.01);
+        }
+        .drop-zone i {
+            font-size: 42px;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+        .drop-zone h3 {
+            font-size: 17px;
+            margin-bottom: 6px;
+            color: #3f3f46;
+        }
+        .drop-zone p {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+        }
+        .upload-btn {
+            padding: 10px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            transition: background 0.2s;
+        }
+        .upload-btn:hover { background: var(--primary-hover); }
+
+        /* 파일 목록 및 썸네일 영역 */
+        .file-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .file-section h3 {
+            font-size: 16px;
+            color: var(--text-main);
+        }
+
+        .file-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 350px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .file-item {
+            background: white;
+            padding: 14px 18px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        .file-thumb {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid #e2e8f0;
+            background: #000;
+        }
+
+        .file-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 7px;
+            background: #f1f5f9;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.1s ease;
+        }
+
+        .file-action-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: none;
+            background: #f1f5f9;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: not-allowed;
+            transition: all 0.2s;
+        }
+        .file-action-btn.active {
+            background: var(--success);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+        .file-action-btn.active:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="https://nanalab.kr" target="_blank">
+            <img src="logo.png" alt="NanaLab Logo" class="logo-img" onerror="this.style.display='none'">
+        </a>
+        <div class="app-title">Video to GIF</div>
+    </header>
+
+    <div class="main-container">
+        <div class="hero-section">
+            <h1 class="hero-title">Video → GIF</h1>
+            <p class="hero-subtitle">Make your own GIF Animation!</p>
+        </div>
+
+        <div class="drop-zone" id="dropZone">
+            <i class="fa-solid fa-file-video"></i>
+            <h3>Upload or Drop your video!</h3>
+            <p>지원 형식: MP4, MOV, WEBM (최대 29 FPS 제한 적용)</p>
+            <input type="file" id="fileInput" multiple accept="video/*" hidden>
+            <button class="upload-btn" id="uploadBtn">동영상 선택하기</button>
+        </div>
+
+        <div class="file-section" id="fileSection" style="display: none;">
+            <h3>Processing Queue</h3>
+            <ul class="file-list" id="fileList"></ul>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileSection = document.getElementById('fileSection');
+        const fileList = document.getElementById('fileList');
+
+        // 드래그 앤 드롭 이벤트 기본 동작 방지
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); });
+        });
+        ['dragenter', 'dragover'].forEach(() => dropZone.classList.add('dragover'));
+        ['dragleave', 'drop'].forEach(() => dropZone.classList.remove('dragover'));
+
+        dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
+        uploadBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+            this.value = '';
+        });
+
+        function handleFiles(files) {
+            const videoFiles = [...files].filter(f => f.type.startsWith('video/'));
+            if (videoFiles.length === 0) return;
+
+            fileSection.style.display = 'block';
+            videoFiles.forEach(file => processVideoToGif(file));
+        }
+
+        function processVideoToGif(file) {
+            const li = document.createElement('li');
+            li.className = 'file-item';
+
+            const videoUrl = URL.createObjectURL(file);
+            
+            li.innerHTML = `
+                <video src="${videoUrl}" class="file-thumb" muted preload="metadata"></video>
+                <div class="file-info">
+                    <span class="file-name">${file.name}</span>
+                    <div class="progress-track">
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+                <button class="file-action-btn" title="Download GIF"><i class="fa-solid fa-download"></i></button>
+            `;
+            fileList.appendChild(li);
+
+            const progressBar = li.querySelector('.progress-bar');
+            const downloadBtn = li.querySelector('.file-action-btn');
+
+            // 프로그레스 바 시뮬레이션 (인코딩 진행률 연동)
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                if (progress < 90) {
+                    progress += 5;
+                    progressBar.style.width = progress + '%';
+                }
+            }, 150);
+
+            // gifshot을 이용한 동영상 -> GIF 변환 (29 FPS 제한 적용)
+            gifshot.isSupported(() => {
+                gifshot.createGIF({
+                    video: [videoUrl],
+                    interval: 1 / 29, // 29 FPS 제한 적용 (프레임 간격 설정)
+                    numFrames: 30,    // 추출할 총 프레임 수 제어 (과부하 방지)
+                    width: 320,       // 해상도 최적화
+                    height: 240,
+                    progressCallback: (p) => {
+                        // gifshot 내부 실제 진행률 반영 (90%까지)
+                        const currentProg = Math.round(p * 90);
+                        if (currentProg > progress) {
+                            progress = currentProg;
+                            progressBar.style.width = progress + '%';
+                        }
+                    }
+                }, (obj) => {
+                    clearInterval(progressInterval);
+                    if (!obj.error) {
+                        progressBar.style.width = '100%';
+                        downloadBtn.classList.add('active');
+
+                        const gifBase64 = obj.image;
+                        const gifName = `animated_${file.name.substring(0, file.name.lastIndexOf('.')) || file.name}.gif`;
+
+                        downloadBtn.onclick = () => {
+                            const a = document.createElement('a');
+                            a.href = gifBase64;
+                            a.download = gifName;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                        };
+                    } else {
+                        console.error("GIF generation error:", obj.error);
+                        progressBar.style.background = '#ef4444';
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
