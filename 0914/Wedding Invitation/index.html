@@ -19,7 +19,6 @@
             align-items: center;
             min-height: 100vh;
         }
-        /* 스마트폰 화면 프레임 */
         .mobile-container {
             width: 100%;
             max-width: 420px;
@@ -36,7 +35,6 @@
                 margin: 20px 0;
             }
         }
-        /* 메인 커버 이미지 영역 */
         .cover-section {
             position: relative;
             width: 100%;
@@ -55,7 +53,6 @@
             height: 150px;
             background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0));
         }
-        /* 본문 내용 영역 */
         .content-section {
             padding: 20px 30px 50px 30px;
             text-align: center;
@@ -83,15 +80,15 @@
             background-color: #d1c7bd;
             margin: 30px auto;
         }
-        /* 문구 영역 (문구.txt 내용 반영) */
+        /* 문구.txt 내용을 불러오는 영역 */
         .greeting-box {
             font-size: 15px;
             line-height: 1.8;
             color: #555;
             margin-bottom: 40px;
             white-space: pre-line; /* 줄바꿈 유지 */
+            text-align: center;
         }
-        /* 실시간 카운트다운 영역 */
         .countdown-container {
             background: #f9f8f6;
             padding: 25px 15px;
@@ -123,7 +120,6 @@
             font-size: 12px;
             color: #999;
         }
-        /* 갤러리 사진 추가 영역 */
         .gallery-section {
             margin-bottom: 40px;
         }
@@ -138,7 +134,6 @@
             margin-bottom: 15px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
-        /* 하단 연락처 및 안내 */
         .info-section {
             font-size: 14px;
             color: #666;
@@ -155,13 +150,12 @@
 <body>
 
     <div class="mobile-container">
-        <!-- 1. 메인 커버 사진 (pictures 폴더 내부 이미지 연동) -->
+        <!-- 메인 커버 사진 -->
         <div class="cover-section">
             <img src="pictures/photo1.jpg" alt="웨딩 대표 사진">
             <div class="cover-overlay"></div>
         </div>
 
-        <!-- 2. 핵심 정보 및 문구 영역 -->
         <div class="content-section">
             <div class="names">김민수 &middot; 이서연</div>
             <div class="date-location">
@@ -171,21 +165,14 @@
 
             <div class="divider"></div>
 
-            <!-- 문구.txt 파일의 내용을 여기에 담습니다 -->
-            <div class="greeting-box">
-                소중한 분들을 모십니다.
-
-                서로 다른 길을 걸어온 두 사람이
-                이제 사랑과 믿음으로 한 길을 걸어가고자 합니다.
-                
-                기쁜 날, 함께 자리하셔서
-                저희의 앞날을 따뜻한 마음으로 축복해 주시면
-                더없는 기쁨으로 간직하겠습니다.
+            <!-- 문구.txt 파일 내용을 동적으로 불러와 표시하는 영역 -->
+            <div class="greeting-box" id="greetingBox">
+                문구를 불러오는 중입니다...
             </div>
 
             <div class="divider"></div>
 
-            <!-- 3. 실시간 카운트다운 애니메이션 영역 -->
+            <!-- 실시간 카운트다운 영역 -->
             <div class="countdown-container">
                 <div class="countdown-title">민수 ❤️ 서연의 결혼식이 <strong><span id="dDayText"></span></strong> 남았습니다</div>
                 <div class="countdown-timers">
@@ -208,7 +195,7 @@
                 </div>
             </div>
 
-            <!-- 4. 갤러리 추가 사진 영역 (pictures 폴더 내 사진 활용) -->
+            <!-- 갤러리 사진 영역 -->
             <div class="gallery-section">
                 <h3>Our Gallery</h3>
                 <img src="pictures/photo2.jpg" alt="갤러리 사진 1" class="gallery-img">
@@ -230,7 +217,22 @@
     </div>
 
     <script>
-        // 결혼식 날짜 설정 (예: 2026년 10월 20일 14:00:00)
+        // 1. 문구.txt 파일 비동기 불러오기
+        async function loadGreetingText() {
+            try {
+                const response = await fetch('문구.txt');
+                if (!response.ok) throw new Error('파일을 찾을 수 없습니다.');
+                const text = await response.text();
+                document.getElementById('greetingBox').innerText = text;
+            } catch (error) {
+                console.error(error);
+                document.getElementById('greetingBox').innerText = '문구.txt 파일을 불러오지 못했습니다.\n(로컬 서버 환경에서 실행 중인지 확인해 주세요)';
+            }
+        }
+
+        loadGreetingText();
+
+        // 2. 실시간 카운트다운 로직
         const weddingDate = new Date('2026-10-20T14:00:00').getTime();
 
         function updateCountdown() {
@@ -264,7 +266,6 @@
             secondsEl.innerText = String(seconds).padStart(2, '0');
         }
 
-        // 1초마다 실시간 카운트다운 갱신
         setInterval(updateCountdown, 1000);
         updateCountdown();
     </script>
