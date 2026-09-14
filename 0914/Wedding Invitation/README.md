@@ -9,6 +9,7 @@
 my-wedding/
 ├── index.html       # 위 제공된 웹 페이지 전체 소스코드 파일
 ├── 문구.txt         # 청첩장에 들어갈 인사말 텍스트 파일
+├── README.md        # 프로젝트 설명 문서
 └── pictures/        # 사진을 보관하는 폴더
     ├── photo1.jpg   # 메인 커버 사진 (상단 대표 이미지)
     ├── photo2.jpg   # 갤러리 사진 1
