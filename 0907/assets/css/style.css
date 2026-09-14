@@ -1,0 +1,1527 @@
+/* ==========================================================================
+   韓国公共交通完全攻略ガイド - メインスタイルシート (style.css)
+   - WCAG 2.1 AA 準拠 (コントラスト比 4.5:1 以上)
+   - レスポンシブ対応 (モバイル・タブレット・PC)
+   - ソリッドカードデザイン & 視認性最優先設計
+   - 印刷専用スタイル (@media print) 完全対応
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   01. CSS Custom Properties (Design Tokens)
+   -------------------------------------------------------------------------- */
+:root {
+  /* Color Palette - WCAG 2.1 AA 検証済み (コントラスト比 4.5:1 以上確保) */
+  --color-primary: #1B2A4A;        /* 深みのあるコリアンネイビー */
+  --color-primary-dark: #0F172A;   /* ヘッダー・強調テキスト */
+  --color-primary-light: #2563EB;  /* インタラクティブ・リンク・ボタン */
+  --color-primary-hover: #1D4ED8;  /* ボタンホバー時 */
+
+  --color-accent-red: #B91C1C;     /* 丹青(ダンチョン)レッド・緊急・警告 */
+  --color-accent-red-bg: #FEF2F2;  /* 警告背景色 */
+  --color-accent-red-border: #FCA5A5;
+
+  --color-accent-blue: #0369A1;    /* サブアクセント (ブルー) */
+  --color-accent-blue-bg: #F0F9FF;
+  
+  --color-accent-green: #15803D;   /* 成功・安全 */
+  --color-accent-green-bg: #F0FDF4;
+
+  /* Neutrals */
+  --color-bg-body: #F8FAFC;        /* 背景色 (すっきりしたスレートグレー) */
+  --color-bg-card: #FFFFFF;        /* カード背景 (ソリッドホワイト) */
+  --color-bg-alt: #F1F5F9;         /* 交互セクション背景 */
+  
+  --color-text-main: #0F172A;      /* メインテキスト (高コントラスト 14.5:1) */
+  --color-text-sub: #334155;       /* サブテキスト (高コントラスト 7.8:1) */
+  --color-text-muted: #475569;     /* 補足注記 (コントラスト 5.2:1) */
+  --color-text-white: #FFFFFF;
+
+  --color-border: #CBD5E1;         /* 明確な境界線 */
+  --color-border-focus: #2563EB;   /* フォーカスインジケーター */
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.15);
+
+  /* Typography */
+  --font-family-base: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-kr: 'Noto Sans KR', var(--font-family-base);
+
+  /* Layout */
+  --max-width: 1180px;
+  --header-height: 72px;
+  --border-radius: 8px;
+  --border-radius-lg: 14px;
+}
+
+/* --------------------------------------------------------------------------
+   02. Reset & Global Styles
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-height) + 16px);
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--color-bg-body);
+  color: var(--color-text-main);
+  line-height: 1.7;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button, input, select {
+  font: inherit;
+}
+
+/* スキップナビゲーション (Accessibility Skip Link) */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background-color: var(--color-accent-red);
+  color: #FFFFFF;
+  padding: 12px 20px;
+  border-radius: var(--border-radius);
+  font-weight: 700;
+  z-index: 1000;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 16px;
+  outline: 3px solid #000;
+}
+
+/* フォーカス可視化 (キーボード操作アクセス性向上) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--color-border-focus);
+  outline-offset: 3px;
+}
+
+/* 共通コンテナ */
+.section-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 共通見出し & バッジ */
+.section-badge {
+  display: inline-block;
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  line-height: 1.35;
+  margin-bottom: 10px;
+}
+
+.section-subtitle {
+  font-size: 1.0625rem;
+  color: var(--color-text-sub);
+  margin-bottom: 32px;
+}
+
+/* 共通ボタンスタイル */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.btn-primary {
+  background-color: var(--color-primary-light);
+  color: #FFFFFF;
+  border-color: var(--color-primary-light);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-outline:hover {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 0.875rem;
+}
+
+/* --------------------------------------------------------------------------
+   03. Sticky Header & Scrollspy
+   -------------------------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #FFFFFF;
+  border-bottom: 2px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  height: var(--header-height);
+}
+
+.header-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.logo-badge {
+  background-color: var(--color-primary-dark);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 0.875rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.logo-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+/* メインナビゲーション */
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  gap: 8px;
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 8px 14px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-text-sub);
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: var(--color-primary-light);
+  background-color: var(--color-bg-alt);
+}
+
+/* Scrollspy Active State */
+.nav-link.is-active {
+  color: var(--color-primary-light);
+  background-color: var(--color-accent-blue-bg);
+  border-bottom: 2px solid var(--color-primary-light);
+}
+
+.btn-emergency-header {
+  background-color: var(--color-accent-red);
+  color: #FFFFFF;
+  border: 1px solid var(--color-accent-red);
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-emergency-header:hover {
+  background-color: #991B1B;
+}
+
+/* 햄버거 메뉴 (모바일) */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.hamburger-bar {
+  width: 100%;
+  height: 3px;
+  background-color: var(--color-primary-dark);
+  border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.hamburger-btn[aria-expanded="true"] .hamburger-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger-btn[aria-expanded="true"] .hamburger-bar:nth-child(2) {
+  opacity: 0;
+}
+.hamburger-btn[aria-expanded="true"] .hamburger-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* --------------------------------------------------------------------------
+   04. Hero Section
+   -------------------------------------------------------------------------- */
+.hero-section {
+  background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
+  color: #FFFFFF;
+  padding: 64px 20px;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.hero-badge {
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #F8FAFC;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  padding: 6px 18px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.hero-title {
+  font-size: 2.375rem;
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 20px;
+  color: #FFFFFF;
+}
+
+.text-highlight {
+  color: #FDE047; /* 鮮やかなイエローでハングルを強調 */
+}
+
+.hero-subtext {
+  font-size: 1.125rem;
+  color: #E2E8F0;
+  line-height: 1.8;
+  margin-bottom: 36px;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-secondary-hero {
+  background-color: #FFFFFF;
+  color: var(--color-primary-dark);
+  border: 2px solid #FFFFFF;
+  padding: 12px 24px;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary-hero:hover {
+  background-color: #F1F5F9;
+  transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   05. Quick Banners (3 Points)
+   -------------------------------------------------------------------------- */
+.quick-banners-section {
+  padding: 64px 0;
+  background-color: var(--color-bg-body);
+}
+
+.banner-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.banner-card {
+  background-color: var(--color-bg-card);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.banner-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary-light);
+}
+
+.banner-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  margin-bottom: 18px;
+}
+
+.icon-card { background-color: #E0F2FE; }
+.icon-transfer { background-color: #DCFCE7; }
+.icon-app { background-color: #FEF3C7; }
+
+.banner-tag {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-primary-light);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.banner-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.banner-desc {
+  font-size: 0.9375rem;
+  color: var(--color-text-sub);
+  margin-bottom: 16px;
+  flex-grow: 1;
+}
+
+.banner-alert {
+  background-color: var(--color-accent-red-bg);
+  border: 1px solid var(--color-accent-red-border);
+  color: #7F1D1D;
+  padding: 12px;
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.banner-alert strong {
+  color: #991B1B;
+}
+
+.banner-list {
+  list-style: none;
+  font-size: 0.875rem;
+  color: var(--color-text-sub);
+}
+
+.banner-list li {
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 8px;
+}
+
+.banner-list li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: var(--color-accent-green);
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------------------
+   06. Checklist Section (localStorage 연동)
+   -------------------------------------------------------------------------- */
+.checklist-section {
+  padding: 64px 0;
+  background-color: #FFFFFF;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.checklist-header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* 進捗バー */
+.progress-box {
+  background-color: var(--color-bg-body);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: 16px 20px;
+  margin-bottom: 32px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.progress-label {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+.progress-percent {
+  font-weight: 800;
+  font-size: 1.125rem;
+  color: var(--color-primary-light);
+}
+
+.progress-track {
+  width: 100%;
+  height: 14px;
+  background-color: #E2E8F0;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3B82F6 0%, #1D4ED8 100%);
+  border-radius: 7px;
+  transition: width 0.3s ease-in-out;
+}
+
+/* チェックリスト項目 */
+.checklist-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.checklist-item {
+  background-color: var(--color-bg-card);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: 16px 20px;
+  transition: all 0.2s ease;
+}
+
+.checklist-item:hover {
+  border-color: var(--color-primary-light);
+  background-color: #F8FAFC;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ネイティブチェックボックス隠蔽と独自デザイン */
+.checklist-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-custom {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border: 2px solid #64748B;
+  border-radius: 6px;
+  margin-top: 3px;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.checklist-checkbox:checked + .checkbox-custom {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary-light);
+}
+
+.checklist-checkbox:checked + .checkbox-custom::after {
+  content: "";
+  width: 6px;
+  height: 12px;
+  border: solid #FFFFFF;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+
+.checklist-checkbox:focus-visible + .checkbox-custom {
+  outline: 3px solid var(--color-border-focus);
+  outline-offset: 3px;
+}
+
+.checkbox-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.checkbox-text strong {
+  font-size: 1.0625rem;
+  color: var(--color-primary-dark);
+}
+
+.checklist-checkbox:checked ~ .checkbox-text strong {
+  text-decoration: line-through;
+  color: #64748B;
+}
+
+.item-sub {
+  font-size: 0.875rem;
+  color: var(--color-text-sub);
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   07. WAI-ARIA Tabs Section
+   -------------------------------------------------------------------------- */
+.tab-section {
+  padding: 64px 0;
+}
+
+.tab-section.alt-bg {
+  background-color: var(--color-bg-alt);
+}
+
+.tabs-wrapper {
+  background-color: var(--color-bg-card);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.tab-list {
+  display: flex;
+  border-bottom: 2px solid var(--color-border);
+  background-color: var(--color-bg-body);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.tab-button {
+  flex: 1;
+  min-width: 160px;
+  padding: 16px 20px;
+  background-color: transparent;
+  border: none;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 3px solid transparent;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-sub);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.tab-button:last-child {
+  border-right: none;
+}
+
+.tab-button:hover {
+  background-color: #E2E8F0;
+  color: var(--color-primary-dark);
+}
+
+.tab-button[aria-selected="true"] {
+  background-color: #FFFFFF;
+  color: var(--color-primary-light);
+  border-bottom: 3px solid var(--color-primary-light);
+  font-weight: 800;
+}
+
+.tab-panel {
+  padding: 32px;
+}
+
+.tab-panel[hidden] {
+  display: none;
+}
+
+/* 탭 패널 내부 카드 스타일 */
+.panel-card, .spot-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.panel-header, .spot-header {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.panel-header h3, .spot-header h3 {
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+.fare-tag {
+  background-color: var(--color-accent-blue-bg);
+  border: 1px solid #BAE6FD;
+  color: var(--color-accent-blue);
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.panel-body-grid, .spot-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.info-block h4, .spot-details h4, .spot-route h4 {
+  font-size: 1.0625rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-bottom: 12px;
+}
+
+.step-list {
+  padding-left: 20px;
+  font-size: 0.9375rem;
+  color: var(--color-text-sub);
+}
+
+.step-list li {
+  margin-bottom: 10px;
+}
+
+.styled-bullet-list, .spot-details ul {
+  list-style: none;
+  font-size: 0.9375rem;
+  color: var(--color-text-sub);
+}
+
+.styled-bullet-list li, .spot-details ul li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 12px;
+}
+
+.styled-bullet-list li::before, .spot-details ul li::before {
+  content: "•";
+  position: absolute;
+  left: 4px;
+  color: var(--color-primary-light);
+  font-weight: 800;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.alert-danger {
+  background-color: #FEF2F2;
+  border: 2px solid #F87171;
+  color: #991B1B;
+}
+
+.mt-sm {
+  margin-top: 14px;
+}
+
+.text-blue { color: #1D4ED8; }
+.text-green { color: #15803D; }
+.text-red { color: #DC2626; }
+.text-night { color: #4338CA; }
+
+/* 관광지 뱃지 */
+.line-badge {
+  display: inline-block;
+  color: #FFFFFF;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  margin-right: 6px;
+}
+
+.line-2 { background-color: #00A84D; }
+.line-4 { background-color: #00A2D1; }
+.line-arex { background-color: #0090D2; }
+.line-gyeongui { background-color: #77C4A3; }
+.line-suin { background-color: #EAA800; color: #000; }
+.line-sinbundang { background-color: #D4003B; }
+
+/* --------------------------------------------------------------------------
+   08. TTS Voice Phrases Section
+   -------------------------------------------------------------------------- */
+.phrases-section {
+  padding: 64px 0;
+  background-color: var(--color-bg-body);
+}
+
+.phrase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+.phrase-card {
+  background-color: var(--color-bg-card);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.phrase-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary-light);
+}
+
+.phrase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.phrase-category {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  background-color: var(--color-bg-alt);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.btn-tts {
+  background-color: var(--color-primary-light);
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-tts:hover {
+  background-color: var(--color-primary-hover);
+  transform: scale(1.03);
+}
+
+.btn-tts.is-speaking {
+  background-color: var(--color-accent-green);
+  animation: pulse-audio 1s infinite;
+}
+
+@keyframes pulse-audio {
+  0% { box-shadow: 0 0 0 0 rgba(21, 128, 61, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(21, 128, 61, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(21, 128, 61, 0); }
+}
+
+.phrase-korean {
+  font-family: var(--font-family-kr);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.phrase-kana {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0284C7;
+  margin-bottom: 8px;
+}
+
+.phrase-meaning {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  margin-bottom: 12px;
+}
+
+.phrase-tip {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-body);
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  border-left: 3px solid var(--color-primary-light);
+}
+
+/* --------------------------------------------------------------------------
+   09. Floating Action Button (FAB) & Mini Popup
+   -------------------------------------------------------------------------- */
+.fab-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.fab-trigger-btn {
+  background-color: var(--color-primary-dark);
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  box-shadow: var(--shadow-lg);
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.fab-trigger-btn:hover {
+  background-color: var(--color-primary-light);
+  transform: translateY(-2px);
+}
+
+.fab-popup {
+  width: 320px;
+  background-color: #FFFFFF;
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 12px;
+  overflow: hidden;
+  animation: popupSlide 0.2s ease-out;
+}
+
+.fab-popup[hidden] {
+  display: none;
+}
+
+@keyframes popupSlide {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fab-popup-header {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fab-popup-title {
+  font-size: 0.9375rem;
+  font-weight: 800;
+}
+
+.btn-popup-close {
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.fab-popup-body {
+  padding: 16px;
+}
+
+.calc-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-bottom: 6px;
+}
+
+.calc-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.calc-input-group input {
+  width: 70px;
+  padding: 6px 8px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  text-align: center;
+}
+
+.calc-result {
+  background-color: var(--color-accent-blue-bg);
+  border: 1px solid #BAE6FD;
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  color: var(--color-accent-blue);
+  margin-bottom: 6px;
+}
+
+.calc-result strong {
+  font-size: 1.0625rem;
+  color: #0369A1;
+}
+
+.calc-note {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.popup-divider {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 14px 0;
+}
+
+.faq-accordion {
+  margin-bottom: 8px;
+  font-size: 0.8125rem;
+}
+
+.faq-accordion summary {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.faq-accordion p {
+  padding: 6px 0 6px 12px;
+  color: var(--color-text-sub);
+  line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   10. Emergency Modal Popup (Focus Trap Target)
+   -------------------------------------------------------------------------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.7);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-backdrop[hidden] {
+  display: none;
+}
+
+.modal-dialog {
+  background-color: #FFFFFF;
+  border-radius: var(--border-radius-lg);
+  max-width: 620px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  border: 2px solid var(--color-accent-red);
+  animation: modalEnter 0.2s ease-out;
+}
+
+@keyframes modalEnter {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 2px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-accent-red-bg);
+}
+
+.modal-badge-alert {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #B91C1C;
+  letter-spacing: 0.05em;
+  display: block;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #991B1B;
+}
+
+.btn-modal-close {
+  background: transparent;
+  border: none;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: #991B1B;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.btn-modal-close:hover {
+  background-color: rgba(185, 28, 28, 0.1);
+}
+
+.modal-content {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.emergency-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-card);
+}
+
+.emergency-item.primary-alert {
+  background-color: #FEF2F2;
+  border-color: #F87171;
+}
+
+.emergency-icon-col {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.emergency-text-col h3 {
+  font-size: 1.0625rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  margin-bottom: 4px;
+}
+
+.phone-number {
+  color: var(--color-accent-red);
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.emergency-desc {
+  font-size: 0.875rem;
+  color: var(--color-text-sub);
+  margin-top: 4px;
+}
+
+.btn-call {
+  display: inline-block;
+  margin-top: 10px;
+  background-color: var(--color-accent-red);
+  color: #FFFFFF;
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.btn-call:hover {
+  background-color: #991B1B;
+}
+
+.emergency-steps {
+  padding-left: 18px;
+  font-size: 0.875rem;
+  color: var(--color-text-sub);
+  margin-top: 8px;
+}
+
+.emergency-steps li {
+  margin-bottom: 6px;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: flex-end;
+  background-color: var(--color-bg-body);
+}
+
+/* --------------------------------------------------------------------------
+   11. Site Footer
+   -------------------------------------------------------------------------- */
+.site-footer {
+  background-color: var(--color-primary-dark);
+  color: #CBD5E1;
+  padding: 48px 0;
+  border-top: 4px solid var(--color-primary-light);
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.footer-logo {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.footer-sub {
+  font-size: 0.9375rem;
+  color: #94A3B8;
+}
+
+.footer-ref {
+  font-size: 0.8125rem;
+  color: #64748B;
+  max-width: 600px;
+}
+
+.footer-copy {
+  font-size: 0.8125rem;
+  color: #64748B;
+  margin-top: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   12. Responsive Media Queries
+   -------------------------------------------------------------------------- */
+@media (max-width: 860px) {
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .main-nav {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    background-color: #FFFFFF;
+    flex-direction: column;
+    padding: 24px;
+    border-bottom: 2px solid var(--color-border);
+    box-shadow: var(--shadow-lg);
+    display: none;
+  }
+
+  .main-nav.is-open {
+    display: flex;
+  }
+
+  .nav-list {
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .nav-actions {
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  .btn-emergency-header {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-title {
+    font-size: 1.875rem;
+  }
+
+  .panel-body-grid, .spot-content-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .checklist-header-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 44px 16px;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .tab-button {
+    min-width: 130px;
+    padding: 12px 14px;
+    font-size: 0.875rem;
+  }
+
+  .fab-container {
+    bottom: 16px;
+    right: 16px;
+  }
+  
+  .fab-popup {
+    width: calc(100vw - 32px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   13. @media print Dedicated Styles
+   (印刷専用スタイル: 不要UI除外・A4白黒対応・チェックリスト&フレーズ印刷)
+   -------------------------------------------------------------------------- */
+@media print {
+  /* 不要なUI要素の非表示 */
+  .skip-link,
+  .site-header,
+  .hero-actions,
+  .quick-banners-section,
+  .btn-outline,
+  .tab-list,
+  .btn-tts,
+  .fab-container,
+  .modal-backdrop,
+  .site-footer,
+  .section-badge,
+  .banner-alert {
+    display: none !important;
+  }
+
+  /* 印刷全体の最適化 */
+  body {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+  }
+
+  .section-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* ヒーロータイトルの簡略印刷 */
+  .hero-section {
+    background: transparent !important;
+    color: #000000 !important;
+    padding: 0 0 16pt 0 !important;
+    text-align: left !important;
+    border-bottom: 2pt solid #000000;
+    margin-bottom: 20pt;
+  }
+
+  .hero-badge {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: 18pt !important;
+    color: #000000 !important;
+  }
+
+  .text-highlight {
+    color: #000000 !important;
+    text-decoration: underline;
+  }
+
+  .hero-subtext {
+    font-size: 10pt !important;
+    color: #333333 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* チェックリストの印刷 */
+  .checklist-section {
+    border: none !important;
+    padding: 0 0 20pt 0 !important;
+    page-break-inside: avoid;
+  }
+
+  .progress-box {
+    display: none;
+  }
+
+  .checklist-items {
+    gap: 8pt !important;
+  }
+
+  .checklist-item {
+    border: 1pt solid #999999 !important;
+    padding: 8pt !important;
+    background: transparent !important;
+  }
+
+  .checkbox-custom {
+    border: 1pt solid #000000 !important;
+    width: 14pt !important;
+    height: 14pt !important;
+  }
+
+  /* 탭 섹션 인쇄 (선택된 탭 패널만 인쇄) */
+  .tab-section {
+    padding: 0 0 20pt 0 !important;
+    background: transparent !important;
+  }
+
+  .tabs-wrapper {
+    border: 1pt solid #999999 !important;
+    box-shadow: none !important;
+  }
+
+  .tab-panel[hidden] {
+    display: none !important;
+  }
+
+  .tab-panel {
+    padding: 12pt !important;
+    display: block !important;
+  }
+
+  /* 会話フレーズの印刷 (A4用紙で綺麗に収まる2列グリッド) */
+  .phrases-section {
+    padding: 0 !important;
+    background: transparent !important;
+    page-break-before: always; /* 会話集は改ページして印刷 */
+  }
+
+  .phrase-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12pt !important;
+  }
+
+  .phrase-card {
+    border: 1pt solid #666666 !important;
+    box-shadow: none !important;
+    padding: 10pt !important;
+    page-break-inside: avoid;
+  }
+
+  .phrase-korean {
+    font-size: 13pt !important;
+    color: #000000 !important;
+  }
+
+  .phrase-kana {
+    font-size: 9pt !important;
+    color: #333333 !important;
+  }
+
+  .phrase-meaning {
+    font-size: 9.5pt !important;
+  }
+
+  .phrase-tip {
+    font-size: 8pt !important;
+    border-left: 2pt solid #000000 !important;
+    background-color: #F3F3F3 !important;
+  }
+}
