@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맞춤형 BMI 및 목표 체중 계산기</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus {
+            border-color: #3498db;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result-box {
+            margin-top: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            display: none;
+        }
+        .result-box h3 {
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-size: 18px;
+            text-align: center;
+        }
+        .result-item {
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: #fff;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+        .result-item span.highlight {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .result-item span.blue {
+            font-weight: bold;
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>BMI & 목표 체중 계산기</h2>
+        
+        <div class="form-group">
+            <label for="gender">성별</label>
+            <select id="gender">
+                <option value="male">남성</option>
+                <option value="female">여성</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="height">키 (cm)</label>
+            <input type="number" id="height" placeholder="예: 175" step="0.1">
+        </div>
+
+        <div class="form-group">
+            <label for="weight">현재 몸무게 (kg)</label>
+            <input type="number" id="weight" placeholder="예: 70" step="0.1">
+        </div>
+
+        <button id="calcBtn">BMI 및 목표 체중 계산하기</button>
+
+        <div class="result-box" id="resultBox">
+            <h3>분석 결과</h3>
+            <div class="result-item">
+                <span>현재 BMI:</span>
+                <span id="currentBmi" class="blue">-</span>
+            </div>
+            <div class="result-item">
+                <span>기준 90 (목표 BMI 18.5):</span>
+                <span id="target90">-</span>
+            </div>
+            <div class="result-item">
+                <span>기준 100 (목표 BMI 22.0):</span>
+                <span id="target100">-</span>
+            </div>
+            <div class="result-item">
+                <span>기준 110 (목표 BMI 25.0):</span>
+                <span id="target110">-</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('calcBtn').addEventListener('click', function() {
+            const heightInput = document.getElementById('height').value;
+            const weightInput = document.getElementById('weight').value;
+
+            if (!heightInput || !weightInput) {
+                alert('키와 몸무게를 모두 입력해 주세요.');
+                return;
+            }
+
+            const heightM = parseFloat(heightInput) / 100; // cm -> m
+            const currentWeight = parseFloat(weightInput);
+
+            if (heightM <= 0 || currentWeight <= 0) {
+                alert('올바른 값을 입력해 주세요.');
+                return;
+            }
+
+            // 현재 BMI 계산 (체중 / 키^2)
+            const currentBmi = currentWeight / (heightM * heightM);
+
+            // 목표 BMI 기준 설정 (예: 90 = 18.5(저체중/정상 경계), 100 = 22.0(표준), 110 = 25.0(과체중 경계))
+            // 키를 기반으로 한 목표 BMI별 체중 구하기 formula: 체중 = 목표BMI * (키m)^2
+            const bmi90 = 18.5 * (heightM * heightM);
+            const bmi100 = 22.0 * (heightM * heightM);
+            const bmi110 = 25.0 * (heightM * heightM);
+
+            function getDiffText(targetWeight) {
+                const diff = currentWeight - targetWeight;
+                if (Math.abs(diff) < 0.1) {
+                    return '목표 체중과 일치합니다!';
+                } else if (diff > 0) {
+                    return `<span class="highlight">${diff.toFixed(1)} kg 감량 필요</span> (${targetWeight.toFixed(1)}kg)`;
+                } else {
+                    return `<span class="blue">${Math.abs(diff).toFixed(1)} kg 증량 필요</span> (${targetWeight.toFixed(1)}kg)`;
+                }
+            }
+
+            document.getElementById('currentBmi').innerText = `${currentBmi.toFixed(2)}`;
+            document.getElementById('target90').innerHTML = getDiffText(bmi90);
+            document.getElementById('target100').innerHTML = getDiffText(bmi100);
+            document.getElementById('target110').innerHTML = getDiffText(bmi110);
+
+            document.getElementById('resultBox').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
