@@ -1,1 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구슬 대포 추첨기 (Marble Cannon Raffle)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Matter.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e293b 100%);
+            color: #f8fafc;
+        }
+        /* 대포 회전 애니메이션 연출 */
+        @keyframes recoil {
+            0% { transform: translate(0, 0) rotate(-45deg); }
+            30% { transform: translate(-4px, 4px) rotate(-42deg); }
+            100% { transform: translate(0, 0) rotate(-45deg); }
+        }
+        .fire-recoil {
+            animation: recoil 0.2s ease-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-between p-4">
 
+    <!-- 헤더 영역 -->
+    <header class="text-center my-2">
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
+            🎰 구슬 대포 추첨기
+        </h1>
+        <p class="text-sm text-slate-300 mt-1">대포에서 발사된 구슬이 장애물을 뚫고 마지막에 살아남는 주인공은?</p>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <main class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-4 gap-6 flex-grow items-start">
+        
+        <!-- 입력 패널 -->
+        <div class="md:col-span-1 bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-slate-700 flex flex-col gap-4">
+            <div>
+                <label for="namesInput" class="block text-sm font-medium text-slate-300 mb-1">참가자 입력</label>
+                <textarea id="namesInput" rows="6" 
+                    class="w-full p-3 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="쉼표(,) 또는 줄바꿈으로 입력&#10;홍길동, 김철수, 이영희, ..."></textarea>
+                <p class="text-xs text-slate-400 mt-1">💡 예: 홍길동, 김철수, 이영희</p>
+            </div>
+
+            <button id="startBtn" 
+                class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 font-bold rounded-xl shadow-lg transition-all transform active:scale-95">
+                대포 발사! 🚀
+            </button>
+
+            <!-- 당첨 결과 표시 영역 -->
+            <div id="resultBox" class="hidden mt-2 p-3 bg-pink-950/60 border border-pink-500/50 rounded-xl text-center">
+                <h3 class="text-xs font-semibold text-pink-300 uppercase tracking-wider">🎉 꼴찌(마지막 도착) 당첨자</h3>
+                <p id="winnerText" class="text-xl font-black text-pink-400 mt-1">-</p>
+            </div>
+        </div>
+
+        <!-- 시뮬레이션 캔버스 영역 -->
+        <div class="md:col-span-3 bg-slate-900/90 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden relative flex items-center justify-center">
+            
+            <!-- 진짜 대포 UI 요소 (상단 좌측에 배치하여 오른쪽 아래로 쏘는 형태) -->
+            <div id="cannonUI" class="absolute top-4 left-6 z-10 flex items-center pointer-events-none transition-transform">
+                <!-- 대포 몸체 (포신) -->
+                <div class="w-16 h-8 bg-gradient-to-r from-slate-600 to-slate-800 border-2 border-slate-500 rounded-r-full rounded-l-md shadow-2xl relative transform -rotate-45 origin-right flex items-center justify-start pl-1">
+                    <div class="w-2 h-4 bg-pink-500 rounded-full animate-pulse"></div>
+                </div>
+                <!-- 대포 바퀴 -->
+                <div class="w-6 h-6 bg-slate-700 border-2 border-slate-400 rounded-full -ml-3 mt-4 shadow-md"></div>
+            </div>
+
+            <div id="canvas-container" class="w-full h-[550px] flex items-center justify-center"></div>
+            
+            <!-- 안내 오버레이 -->
+            <div id="overlayMsg" class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-xs pointer-events-none transition-opacity">
+                <span class="text-slate-400 font-medium text-lg">참가자 입력 후 '대포 발사!'를 눌러주세요</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="text-xs text-slate-500 mt-4">
+        Powered by Matter.js & Tailwind CSS
+    </footer>
+
+    <!-- 시뮬레이션 스크립트 -->
+    <script>
+        const { Engine, Render, Runner, Bodies, Composite, Events, Body } = Matter;
+
+        let engine, render, runner;
+        const canvasWidth = 600;
+        const canvasHeight = 550;
+
+        function initEngine() {
+            const container = document.getElementById('canvas-container');
+            container.innerHTML = '';
+
+            engine = Engine.create();
+            engine.world.gravity.y = 1;
+
+            render = Render.create({
+                element: container,
+                engine: engine,
+                options: {
+                    width: canvasWidth,
+                    height: canvasHeight,
+                    wireframes: false,
+                    background: '#0f172a'
+                }
+            });
+
+            Render.run(render);
+            runner = Runner.create();
+            Runner.run(runner, engine);
+
+            createObstacles();
+        }
+
+        function createObstacles() {
+            const world = engine.world;
+            const walls = [
+                Bodies.rectangle(canvasWidth / 2, canvasHeight + 10, canvasWidth, 20, { isStatic: true, render: { fillStyle: '#334155' } }),
+                Bodies.rectangle(-10, canvasHeight / 2, 20, canvasHeight, { isStatic: true, render: { visible: false } }),
+                Bodies.rectangle(canvasWidth + 10, canvasHeight / 2, 20, canvasHeight, { isStatic: true, render: { visible: false } })
+            ];
+            Composite.add(world, walls);
+
+            // 핀(장애물) 배치
+            const rows = 6;
+            const cols = 7;
+            const startY = 140;
+            const spacingX = canvasWidth / (cols + 1);
+            const spacingY = 55;
+
+            for (let r = 0; r < rows; r++) {
+                const isEvenRow = r % 2 === 0;
+                const currentCols = isEvenRow ? cols : cols - 1;
+                const rowWidth = (currentCols - 1) * spacingX;
+                const startX = (canvasWidth - rowWidth) / 2;
+
+                for (let c = 0; c < currentCols; c++) {
+                    const x = startX + c * spacingX;
+                    const y = startY + r * spacingY;
+                    const pin = Bodies.circle(x, y, 8, {
+                        isStatic: true,
+                        render: { fillStyle: '#64748b' },
+                        restitution: 0.8
+                    });
+                    Composite.add(world, pin);
+                }
+            }
+
+            // 하단 결승선 센서
+            const finishLine = Bodies.rectangle(canvasWidth / 2, canvasHeight - 30, canvasWidth, 10, {
+                isStatic: true,
+                isSensor: true,
+                render: { fillStyle: 'rgba(236, 72, 153, 0.2)' }
+            });
+            finishLine.label = 'finishSensor';
+            Composite.add(world, finishLine);
+        }
+
+        document.getElementById('startBtn').addEventListener('click', () => {
+            const rawInput = document.getElementById('namesInput').value;
+            const names = rawInput.split(/[\n,]/).map(n => n.trim()).filter(n => n.length > 0);
+
+            if (names.length === 0) {
+                alert('최소 한 명 이상의 참가자를 입력해주세요!');
+                return;
+            }
+
+            document.getElementById('overlayMsg').classList.add('opacity-0');
+            document.getElementById('resultBox').classList.add('hidden');
+            
+            initEngine();
+            let finishedCount = 0;
+            let lastFinishedName = "";
+
+            // 대포 발사 반동 효과 클래스 주기
+            const cannonUI = document.getElementById('cannonUI');
+
+            names.forEach((name, index) => {
+                setTimeout(() => {
+                    // 대포 반동 애니메이션 트리거
+                    cannonUI.classList.remove('fire-recoil');
+                    void cannonUI.offsetWidth; // reflow trick
+                    cannonUI.classList.add('fire-recoil');
+
+                    // 대포 위치(좌측 상단 x: 60, y: 40)에서 대각선 아래 우측으로 발사
+                    const startX = 70;
+                    const startY = 50;
+                    
+                    const ball = Bodies.circle(startX, startY, 14, {
+                        restitution: 0.6,
+                        friction: 0.005,
+                        render: { 
+                            fillStyle: `hsl(${Math.random() * 360}, 80%, 65%)` 
+                        }
+                    });
+                    
+                    ball.labelName = name;
+                    Composite.add(engine.world, ball);
+
+                    // 대포에서 쾅 하고 튀어나가는 초기 속도 벡터 부여 (우측 하단 대각선 방향)
+                    Body.setVelocity(ball, { x: 8 + Math.random() * 3, y: 4 + Math.random() * 2 });
+                }, index * 450); 
+            });
+
+            Events.on(engine, 'collisionStart', (event) => {
+                event.pairs.forEach(pair => {
+                    let ball = null;
+
+                    if (pair.bodyA.label === 'finishSensor' && pair.bodyB.labelName) {
+                        ball = pair.bodyB;
+                    } else if (pair.bodyB.label === 'finishSensor' && pair.bodyA.labelName) {
+                        ball = pair.bodyA;
+                    }
+
+                    if (ball && !ball.isFinished) {
+                        ball.isFinished = true;
+                        finishedCount++;
+                        lastFinishedName = ball.labelName;
+
+                        if (finishedCount === names.length) {
+                            document.getElementById('winnerText').innerText = lastFinishedName;
+                            document.getElementById('resultBox').classList.remove('hidden');
+                        }
+                    }
+                });
+            });
+        });
+
+        window.onload = () => {
+            initEngine();
+        };
+    </script>
+</body>
+</html>
