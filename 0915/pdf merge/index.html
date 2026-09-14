@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF 파일 병합기</title>
+    <!-- pdf-lib CDN 연동 -->
+    <script src="https://unpkg.com/pdf-lib@1.4.0/dist/pdf-lib.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 550px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .upload-box {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 20px;
+        }
+        .upload-box:hover {
+            background: #e9ecef;
+        }
+        .upload-box input {
+            display: none;
+        }
+        .file-list {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .file-item {
+            font-size: 13px;
+            padding: 5px 8px;
+            margin-bottom: 4px;
+            background: #fff;
+            border-radius: 4px;
+            border: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        #loading {
+            text-align: center;
+            margin-top: 15px;
+            color: #e67e22;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>PDF 파일 병합기</h2>
+        
+        <label class="upload-box">
+            <p>📄 병합할 PDF 파일들을 선택하세요 (여러 개 선택 가능)</p>
+            <input type="file" id="fileInput" accept=".pdf" multiple>
+        </label>
+
+        <div class="file-list" id="fileList">
+            <div style="text-align: center; color: #888; font-size: 13px;">선택된 파일이 없습니다.</div>
+        </div>
+
+        <button id="mergeBtn" disabled>PDF 병합 및 다운로드</button>
+        <div id="loading">PDF 파일을 병합 중입니다... 잠시만 기다려주세요.</div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileListEl = document.getElementById('fileList');
+        const mergeBtn = document.getElementById('mergeBtn');
+        const loadingEl = document.getElementById('loading');
+
+        let selectedFiles = [];
+
+        fileInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            // 기존 파일 목록에 추가
+            selectedFiles = selectedFiles.concat(files);
+            updateFileList();
+            fileInput.value = ''; // 초기화하여 같은 파일 재선택 가능하게 함
+        });
+
+        function updateFileList() {
+            if (selectedFiles.length === 0) {
+                fileListEl.innerHTML = '<div style="text-align: center; color: #888; font-size: 13px;">선택된 파일이 없습니다.</div>';
+                mergeBtn.disabled = true;
+                return;
+            }
+
+            fileListEl.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                item.innerHTML = `
+                    <span>${index + 1}. ${file.name}</span>
+                    <button style="width: auto; padding: 2px 6px; font-size: 11px; background: #e74c3c;" onclick="removeFile(${index})">삭제</button>
+                `;
+                fileListEl.appendChild(item);
+            });
+            mergeBtn.disabled = false;
+        }
+
+        window.removeFile = function(index) {
+            selectedFiles.splice(index, 1);
+            updateFileList();
+        };
+
+        mergeBtn.addEventListener('click', async function() {
+            if (selectedFiles.length === 0) return;
+
+            loadingEl.style.display = 'block';
+            mergeBtn.disabled = true;
+
+            try {
+                // PDF-lib를 이용한 PDF 병합 로직
+                const mergedPdf = await PDFLib.PDFDocument.create();
+
+                for (let file of selectedFiles) {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                    copiedPages.forEach((page) => {
+                        mergedPdf.addPage(page);
+                    });
+                }
+
+                const mergedPdfFileBytes = await mergedPdf.save();
+                
+                // 다운로드 트리거
+                const blob = new Blob([mergedPdfFileBytes], { type: 'application/pdf' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'merged_document.pdf';
+                link.click();
+            } catch (error) {
+                console.error(error);
+                alert('PDF를 병합하는 도중 오류가 발생했습니다.');
+            } finally {
+                loadingEl.style.display = 'none';
+                mergeBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
