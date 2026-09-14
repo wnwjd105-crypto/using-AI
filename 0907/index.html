@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="日本人観光客のための韓国公共交通機関（地下鉄・市内バス・タクシー）完全ガイド。T-moneyカードの購入・チャージ、乗り換え割引ルール、主要観光地へのアクセス、必須韓国語音声TTS、緊急時対応まで分かりやすく解説。">
+  <meta name="keywords" content="韓国旅行, 韓国交通, 地下鉄, 市内バス, T-money, 乗り換え割引, 明洞, 弘大, 聖水, 江南, 韓国語会話">
+  <title>韓国公共交通機関 完全攻略ガイド | 日本人旅行者のための安心ナビ</title>
+  
+  <!-- Google Fonts: Noto Sans JP & Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- 스킵 네비게이션 (Accessibility Skip Link) -->
+  <a href="#main-content" class="skip-link">メインコンテンツへスキップ</a>
+
+  <!-- 상단 Sticky 헤더 -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="#" class="brand-logo" aria-label="韓国公共交通ガイド ホームへ">
+        <span class="logo-badge">🇰🇷 K-TRANSIT</span>
+        <span class="logo-title">韓国交通ガイド</span>
+      </a>
+
+      <!-- 모바일 햄버거 메뉴 버튼 -->
+      <button type="button" 
+              class="hamburger-btn" 
+              id="hamburger-btn" 
+              aria-expanded="false" 
+              aria-controls="main-nav" 
+              aria-label="ナビゲーションメニューを開く">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+
+      <!-- 네비게이션 메뉴 (Scrollspy 대응) -->
+      <nav class="main-nav" id="main-nav" aria-label="主要ナビゲーション">
+        <ul class="nav-list" id="nav-list">
+          <li><a href="#quick-banners" class="nav-link">基本情報</a></li>
+          <li><a href="#checklist-section" class="nav-link">準備チェック</a></li>
+          <li><a href="#transport-section" class="nav-link">交通手段別</a></li>
+          <li><a href="#destination-section" class="nav-link">観光地ルート</a></li>
+          <li><a href="#phrases-section" class="nav-link">音声フレーズ</a></li>
+        </ul>
+        <div class="nav-actions">
+          <button type="button" class="btn btn-emergency-header" id="open-emergency-modal-header" aria-haspopup="dialog" aria-controls="emergency-modal">
+            <span class="emergency-icon" aria-hidden="true">🚨</span> 緊急連絡・紛失
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <main id="main-content">
+    
+    <!-- 히어로 섹션 -->
+    <section class="hero-section" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <p class="hero-badge">初韓国でも安心！初心者向け完全ナビ</p>
+        <h1 id="hero-title" class="hero-title">
+          韓国旅行の必需品！<br>
+          <span class="text-highlight">지하철 (ジハチョル / 地下鉄)</span> &amp; <span class="text-highlight">버스 (ボス / バス)</span> 完全ガイド
+        </h1>
+        <p class="hero-subtext">
+          T-money (티머니 / 交通カード) の買い方から、知っておくとトクする「30分以内乗り換え割引」、改札でのトラブル対応、現地ですぐ使える韓国語音声まで徹底解説します。
+        </p>
+        <div class="hero-actions">
+          <a href="#checklist-section" class="btn btn-primary">出発前チェックリストを始める</a>
+          <button type="button" class="btn btn-secondary-hero" id="open-emergency-modal-hero" aria-haspopup="dialog" aria-controls="emergency-modal">
+            緊急・紛失物サポートを確認
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 퀵 배너 3종 섹션 -->
+    <section class="quick-banners-section" id="quick-banners" aria-labelledby="quick-banners-title">
+      <div class="section-container">
+        <h2 id="quick-banners-title" class="section-title">知っておきたい交通の基本 3箇条</h2>
+        <p class="section-subtitle">スムーズな移動のために、まずこの3つのポイントを押さえましょう</p>
+
+        <div class="banner-grid">
+          <!-- 배너 1: T-money -->
+          <article class="banner-card">
+            <div class="banner-icon-box icon-card" aria-hidden="true">💳</div>
+            <div class="banner-body">
+              <span class="banner-tag">Point 01: 必須アイテム</span>
+              <h3 class="banner-title">
+                T-money (티머니 / 交通カード) 購入場所
+              </h3>
+              <p class="banner-desc">
+                空港、コンビニ（CU・GS25・セブンイレブン）、地下鉄駅の券売機で購入可能です。
+              </p>
+              <div class="banner-alert">
+                <strong>⚠️ 重要注意点:</strong> カードチャージ (충전 / チュンジョン) は<strong>「韓国ウォンの現金のみ」</strong>可能です。クレジットカードではチャージできないため、事前に現金を準備しましょう。
+              </div>
+            </div>
+          </article>
+
+          <!-- 배너 2: 환승 할인 -->
+          <article class="banner-card">
+            <div class="banner-icon-box icon-transfer" aria-hidden="true">🔄</div>
+            <div class="banner-body">
+              <span class="banner-tag">Point 02: お得な制度</span>
+              <h3 class="banner-title">
+                환승 할인 (ファンスン ハリン / 乗換割引) 30分以内
+              </h3>
+              <p class="banner-desc">
+                地下鉄 ⇄ バス、バス ⇄ バスを<strong>30分以内（21時〜翌朝7時は60分以内）</strong>に乗り換えると、初乗り運賃が重複せず距離に応じた少額加算のみで乗車できます（最大4回まで乗換可能）。
+              </p>
+              <div class="banner-alert">
+                <strong>⚠️ 重要注意点:</strong> 下車時にも必ずカードリーダーにタッチ (하차 태그 / ハチャタグ) してください。タッチせずに降りると割引が無効になります。
+              </div>
+            </div>
+          </article>
+
+          <!-- 배너 3: 막차 시간 & 지도 앱 -->
+          <article class="banner-card">
+            <div class="banner-icon-box icon-app" aria-hidden="true">📱</div>
+            <div class="banner-body">
+              <span class="banner-tag">Point 03: 必携アプリ</span>
+              <h3 class="banner-title">
+                막차 (マクチャ / 終電) &amp; おすすめ地図アプリ
+              </h3>
+              <p class="banner-desc">
+                韓国ではGoogleマップの徒歩ルート検索が制限されています。現地移動には次の2つのアプリが必須です。
+              </p>
+              <ul class="banner-list">
+                <li><strong>NAVER Map (네이버 지도):</strong> 日本語完全対応。リアルタイムのバス到着時刻や徒歩ナビに最適。</li>
+                <li><strong>Subway Korea (지하철 종결자):</strong> 首都圏地下鉄の駅番号検索、最短乗り換え、終電アラームに対応。</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 교통 준비 체크리스트 섹션 (localStorage 연동) -->
+    <section class="checklist-section" id="checklist-section" aria-labelledby="checklist-title">
+      <div class="section-container">
+        <div class="checklist-header-wrapper">
+          <div>
+            <span class="section-badge">Travel Checklist</span>
+            <h2 id="checklist-title" class="section-title">交通準備チェックリスト</h2>
+            <p class="section-subtitle">出発前や到着直後に確認すべき必須ステップです。チェック状態はブラウザに自動保存されます。</p>
+          </div>
+          <button type="button" class="btn btn-outline" id="reset-checklist-btn" aria-label="チェックリストをリセットして全チェックを解除する">
+            🔄 リセット (初期化)
+          </button>
+        </div>
+
+        <!-- 진행률 바 (Progress Bar) -->
+        <div class="progress-box">
+          <div class="progress-info">
+            <span class="progress-label">達成率</span>
+            <span class="progress-percent" id="checklist-status" aria-live="polite">0% 完了 (0 / 6)</span>
+          </div>
+          <div class="progress-track" role="progressbar" id="checklist-progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="交通準備チェックリストの達成進捗度">
+            <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- 체크리스트 항목 (6개) -->
+        <ul class="checklist-items" id="checklist-container">
+          <li class="checklist-item">
+            <label class="checkbox-label" for="chk-item-1">
+              <input type="checkbox" id="chk-item-1" class="checklist-checkbox" data-index="1">
+              <span class="checkbox-custom" aria-hidden="true"></span>
+              <span class="checkbox-text">
+                <strong>T-money (티머니 / 交通カード) の購入とウォン現金チャージ</strong>
+                <span class="item-sub">カード本体代（約3,000〜4,000ウォン）＋ 滞在期間に応じた現金チャージ（2〜3泊なら約20,000ウォン目安）。</span>
+              </span>
+            </label>
+          </li>
+          <li class="checklist-item">
+            <label class="checkbox-label" for="chk-item-2">
+              <input type="checkbox" id="chk-item-2" class="checklist-checkbox" data-index="2">
+              <span class="checkbox-custom" aria-hidden="true"></span>
+              <span class="checkbox-text">
+                <strong>NAVER Map (네이버 지도 / ネイバーマップ) アプリのインストール＆日本語設定</strong>
+                <span class="item-sub">韓国での徒歩ルート検索、バスのリアルタイム接近案内、日本語での店舗検索が可能です。</span>
+              </span>
+            </label>
+          </li>
+          <li class="checklist-item">
+            <label class="checkbox-label" for="chk-item-3">
+              <input type="checkbox" id="chk-item-3" class="checklist-checkbox" data-index="3">
+              <span class="checkbox-custom" aria-hidden="true"></span>
+              <span class="checkbox-text">
+                <strong>지하철 노선도 (ジハチョル ノソンド / 地下鉄路線図) 画像のスマートフォン保存</strong>
+                <span class="item-sub">地下鉄駅の番号（例：明洞駅は424番）を控えておくと、ハングルが読めなくても迷わず移動できます。</span>
+              </span>
+            </label>
+          </li>
+          <li class="checklist-item">
+            <label class="checkbox-label" for="chk-item-4">
+              <input type="checkbox" id="chk-item-4" class="checklist-checkbox" data-index="4">
+              <span class="checkbox-custom" aria-hidden="true"></span>
+              <span class="checkbox-text">
+                <strong>エスカレーター右側立ち・左側追い越し＆マナー席（妊婦・優先席）の確認</strong>
+                <span class="item-sub">地下鉄車両両端の「노약자석 (ノヤクチャソク / 交通弱者席)」とピンク色の「임산부 배려석 (イムサンブ ベリョソク / 妊婦配慮席)」は空いていても座らないのが一般的なマナーです。</span>
+              </span>
+            </label>
+          </li>
+          <li class="checklist-item">
+            <label class="checkbox-label" for="chk-item-5">
+              <input type="checkbox" id="chk-item-5" class="checklist-checkbox" data-index="5">
+              <span class="checkbox-custom" aria-hidden="true"></span>
+              <span class="checkbox-text">
+                <strong>시내버스 (シネボス / 市内バス) 乗車時と降車時の「ピッ（タグ）」習慣化</strong>
+                <span class="item-sub">前ドアから乗る際にタッチ、後ドアから降りる際にも必ずタッチ。乗換割引を適用させるための必須習慣です。</span>
+              </span>
+            </label>
+          </li>
+          <li class="checklist-item">
+            <label class="checkbox-label" for="chk-item-6">
+              <input type="checkbox" id="chk-item-6" class="checklist-checkbox" data-index="6">
+              <span class="checkbox-custom" aria-hidden="true"></span>
+              <span class="checkbox-text">
+                <strong>深夜移動用の「深夜バス：올빼미 버스 (オルペミボス / フクロウバス)」または「カカオT」配車アプリの準備</strong>
+                <span class="item-sub">深夜24時以降もNから始まる深夜専用バス（例：N13, N15）が運行。タクシー配車には「Kakao T (カカオタクシー)」が便利です。</span>
+              </span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- WAI-ARIA 탭 1: 교통수단별 이용법 -->
+    <section class="tab-section" id="transport-section" aria-labelledby="transport-tabs-title">
+      <div class="section-container">
+        <span class="section-badge">Transportation Types</span>
+        <h2 id="transport-tabs-title" class="section-title">交通手段別 乗り方＆利用マナー比較</h2>
+        <p class="section-subtitle">左右の矢印キー（← / →）またはクリックでタブを切り替えて詳細を確認できます。</p>
+
+        <div class="tabs-wrapper">
+          <div role="tablist" class="tab-list" aria-label="交通手段別の利用案内タブ">
+            <button type="button" 
+                    role="tab" 
+                    id="tab-transport-subway" 
+                    class="tab-button" 
+                    aria-selected="true" 
+                    aria-controls="panel-transport-subway" 
+                    tabindex="0">
+              🚇 지하철 (ジハチョル / 地下鉄)
+            </button>
+            <button type="button" 
+                    role="tab" 
+                    id="tab-transport-bus" 
+                    class="tab-button" 
+                    aria-selected="false" 
+                    aria-controls="panel-transport-bus" 
+                    tabindex="-1">
+              🚌 시내버스 (シネボス / 市内バス)
+            </button>
+            <button type="button" 
+                    role="tab" 
+                    id="tab-transport-taxi" 
+                    class="tab-button" 
+                    aria-selected="false" 
+                    aria-controls="panel-transport-taxi" 
+                    tabindex="-1">
+              🚕 택시 (テクシ / タクシー)
+            </button>
+          </div>
+
+          <!-- 탭 패널 1: 지하철 -->
+          <div role="tabpanel" 
+               id="panel-transport-subway" 
+               class="tab-panel is-active" 
+               aria-labelledby="tab-transport-subway" 
+               tabindex="0">
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3>지하철 (ジハチョル / 地下鉄) の基本ルールと利用手順</h3>
+                <span class="fare-tag">基本初乗り運賃: 1,400ウォン (カード利用時)</span>
+              </div>
+              <div class="panel-body-grid">
+                <div class="info-block">
+                  <h4>💡 乗車の流れ</h4>
+                  <ol class="step-list">
+                    <li>改札口のカードリーダーにT-moneyカードをタッチ（残高が表示されます）。</li>
+                    <li>乗車方向（終着駅や主要乗換駅の名前）と<strong>「駅番号」</strong>を確認してホームへ進む。</li>
+                    <li>降車時も改札口のリーダーにタッチして出場。</li>
+                  </ol>
+                </div>
+                <div class="info-block">
+                  <h4>⚠️ 知っておくべき重要ポイント</h4>
+                  <ul class="styled-bullet-list">
+                    <li><strong>改札誤進入（15分以内ルール）:</strong> 反対側の改札に間違えて入ってしまった場合、<strong>同一駅で15分以内</strong>なら反対側の改札にタッチして入り直しても追加運賃は発生しません（同一路線・同乗車駅基準）。</li>
+                    <li><strong>駅出口番号:</strong> 韓国の地下鉄は出口番号（1番出口〜）が非常に分かりやすく整備されています。目的地の最寄り出口番号を事前に調べておくと迷いません。</li>
+                    <li><strong>エスカレーター＆マナー:</strong> 急ぐ人のために左側を空け、右側に立つのが定着しています。車内での通話や大声での会話は控えましょう。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 탭 패널 2: 버스 -->
+          <div role="tabpanel" 
+               id="panel-transport-bus" 
+               class="tab-panel" 
+               aria-labelledby="tab-transport-bus" 
+               tabindex="0" 
+               hidden>
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3>시내버스 (シネボス / 市内バス) の色別系統とルール</h3>
+                <span class="fare-tag">幹線バス初乗り運賃: 1,500ウォン (カード利用時)</span>
+              </div>
+              <div class="panel-body-grid">
+                <div class="info-block">
+                  <h4>🎨 バスの車体色による違い</h4>
+                  <ul class="styled-bullet-list">
+                    <li><strong class="text-blue">青色バス (幹線):</strong> ソウル市内の主要幹線道路を結ぶ長距離移動用。</li>
+                    <li><strong class="text-green">緑色バス (支線・マウル):</strong> 地下鉄駅と住宅街・近隣エリアを結ぶ地域巡回用。</li>
+                    <li><strong class="text-red">赤色バス (広域):</strong> ソウルと京畿道（水原、板橋、一山など）を結ぶ高速バス。</li>
+                    <li><strong class="text-night">Nバス (深夜オルペミ):</strong> 23:30〜翌06:00運行の深夜専用バス。</li>
+                  </ul>
+                </div>
+                <div class="info-block">
+                  <h4>🚫 車内持ち込み厳禁ルール</h4>
+                  <div class="banner-alert alert-danger">
+                    <strong>蓋なし飲料の持ち込み禁止 (테이크아웃 금지):</strong>
+                    ストローが刺さったカップコーヒーやタピオカミルクティーなど、こぼれる恐れのある持ち帰り飲料を持っていると乗車を拒否されます。密閉されたペットボトルや水筒のみ持ち込み可能です。
+                  </div>
+                  <ul class="styled-bullet-list mt-sm">
+                    <li><strong>乗車・降車のドア:</strong> 前扉（前ドア）から乗車してカードタッチ、後扉（中央ドア）から降車してカードタッチします。</li>
+                    <li><strong>降車ベル (하차벨 / ハチャベル):</strong> 降りる停留所のアナウンスが流れたら、あらかじめ赤いベルを押しておきましょう。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 탭 패널 3: 택시 -->
+          <div role="tabpanel" 
+               id="panel-transport-taxi" 
+               class="tab-panel" 
+               aria-labelledby="tab-transport-taxi" 
+               tabindex="0" 
+               hidden>
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3>택시 (テクシ / タクシー) の種類と安全な乗り方</h3>
+                <span class="fare-tag">一般タクシー初乗り運賃: 4,800ウォン (深夜割増あり)</span>
+              </div>
+              <div class="panel-body-grid">
+                <div class="info-block">
+                  <h4>🚖 タクシーの種類</h4>
+                  <ul class="styled-bullet-list">
+                    <li><strong>一般タクシー (オレンジ/シルバー/白):</strong> 最も一般的で安価。深夜22:00〜翌04:00は20%〜40%の深夜割増（야간할증 / ヤガンハルチュン）が適用。</li>
+                    <li><strong>模範タクシー (모범택시 / 黒色・金帯):</strong> ベテランドライバー、車両が大型で清潔。初乗り7,000ウォン。</li>
+                    <li><strong>大型・インターナショナルタクシー:</strong> 外国語対応可能な事前予約制タクシー。</li>
+                  </ul>
+                </div>
+                <div class="info-block">
+                  <h4>🛡️ トラブル防止チェック</h4>
+                  <ul class="styled-bullet-list">
+                    <li><strong>メーター確認:</strong> 発車時にメーター（미터기 / ミトギ）が作動しているか確認。交渉による定額請求は違法です。</li>
+                    <li><strong>支払いはT-moneyまたはクレカ:</strong> 現金がなくてもT-moneyカードまたは国際クレジットカード（VISA/Mastercard等）で決済可能。</li>
+                    <li><strong>領収書 (영수증 / ヨンスジュン) を必ずもらう:</strong> 車内に忘れ物をした際、領収書に記載された車両番号と会社電話番号で即座に問い合わせができます。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WAI-ARIA 탭 2: 주요 관광지 찾아가는 법 -->
+    <section class="tab-section alt-bg" id="destination-section" aria-labelledby="destination-tabs-title">
+      <div class="section-container">
+        <span class="section-badge">Popular Spots</span>
+        <h2 id="destination-tabs-title" class="section-title">主要観光地への地下鉄アクセスガイド</h2>
+        <p class="section-subtitle">日本人旅行者に人気の4大エリアへの最寄り駅、路線、おすすめ出口番号をまとめました。</p>
+
+        <div class="tabs-wrapper">
+          <div role="tablist" class="tab-list" aria-label="人気観光地アクセス案内タブ">
+            <button type="button" 
+                    role="tab" 
+                    id="tab-spot-myeongdong" 
+                    class="tab-button" 
+                    aria-selected="true" 
+                    aria-controls="panel-spot-myeongdong" 
+                    tabindex="0">
+              🛍️ 명동 (明洞 / ミョンドン)
+            </button>
+            <button type="button" 
+                    role="tab" 
+                    id="tab-spot-hongdae" 
+                    class="tab-button" 
+                    aria-selected="false" 
+                    aria-controls="panel-spot-hongdae" 
+                    tabindex="-1">
+              🎨 홍대 (弘大 / ホンデ)
+            </button>
+            <button type="button" 
+                    role="tab" 
+                    id="tab-spot-seongsu" 
+                    class="tab-button" 
+                    aria-selected="false" 
+                    aria-controls="panel-spot-seongsu" 
+                    tabindex="-1">
+              ☕ 성수 (聖水 / ソンス)
+            </button>
+            <button type="button" 
+                    role="tab" 
+                    id="tab-spot-gangnam" 
+                    class="tab-button" 
+                    aria-selected="false" 
+                    aria-controls="panel-spot-gangnam" 
+                    tabindex="-1">
+              🏙️ 강남 (江南 / カンナム)
+            </button>
+          </div>
+
+          <!-- 관광지 1: 명동 -->
+          <div role="tabpanel" 
+               id="panel-spot-myeongdong" 
+               class="tab-panel is-active" 
+               aria-labelledby="tab-spot-myeongdong" 
+               tabindex="0">
+            <div class="spot-card">
+              <div class="spot-header">
+                <h3>명동 (明洞 / ミョンドン) - コスメ・両替・屋台グルメの聖地</h3>
+                <span class="line-badge line-4">4号線 明洞駅 (424)</span>
+                <span class="line-badge line-2">2号線 乙支路入口駅 (202)</span>
+              </div>
+              <div class="spot-content-grid">
+                <div class="spot-details">
+                  <h4>🚶 おすすめ最寄り出口</h4>
+                  <ul>
+                    <li><strong>4号線 明洞駅 6番出口:</strong> メインストリート直結！コスメ通りや屋台街へすぐ。</li>
+                    <li><strong>4号線 明洞駅 8番出口:</strong> 明洞餃子や南山オルミ（Nソウルタワー行きエレベーター）方面。</li>
+                    <li><strong>2号線 乙支路入口駅 5・6番出口:</strong> ロッテ百貨店本店や免税店へのアクセス至便。</li>
+                  </ul>
+                </div>
+                <div class="spot-route">
+                  <h4>✈️ 仁川空港からのアクセス</h4>
+                  <p>空港鉄道A'REX（一般列車）で「ソウル駅」まで乗車（約59分） ➔ 地下鉄4号線に乗換えて2駅（約4分）で明洞駅到着。乗り換えも非常にスムーズです。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 관광지 2: 홍대 -->
+          <div role="tabpanel" 
+               id="panel-spot-hongdae" 
+               class="tab-panel" 
+               aria-labelledby="tab-spot-hongdae" 
+               tabindex="0" 
+               hidden>
+            <div class="spot-card">
+              <div class="spot-header">
+                <h3>홍대 (弘大 / ホンデ) - 若者カルチャー・ファッション・カフェの街</h3>
+                <span class="line-badge line-2">2号線 弘大入口駅 (239)</span>
+                <span class="line-badge line-arex">空港鉄道 A'REX</span>
+                <span class="line-badge line-gyeongui">京義・中央線</span>
+              </div>
+              <div class="spot-content-grid">
+                <div class="spot-details">
+                  <h4>🚶 おすすめ最寄り出口</h4>
+                  <ul>
+                    <li><strong>9番出口:</strong> 弘大一番の待ち合わせ定番スポット！歩行者天国・ショップ通りへ直結。</li>
+                    <li><strong>3番出口:</strong> 延南洞（ヨンナムドン）の「京義線スッキル公園」やおしゃれなカフェ通り方面。</li>
+                    <li><strong>4番出口:</strong> AK&amp;弘大ショッピングモール直結、空港鉄道改札から最寄り。</li>
+                  </ul>
+                </div>
+                <div class="spot-route">
+                  <h4>✈️ 仁川空港からのアクセス</h4>
+                  <p>空港鉄道A'REX（一般列車）で<strong>乗換なし直通約50分</strong>で弘大入口駅に到着！初日や最終日の滞在拠点としても抜群の人気を誇ります。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 관광지 3: 성수 -->
+          <div role="tabpanel" 
+               id="panel-spot-seongsu" 
+               class="tab-panel" 
+               aria-labelledby="tab-spot-seongsu" 
+               tabindex="0" 
+               hidden>
+            <div class="spot-card">
+              <div class="spot-header">
+                <h3>성수 (聖水 / ソンス) - 工場リノベカフェ＆韓国トレンド最前線</h3>
+                <span class="line-badge line-2">2号線 聖水駅 (211)</span>
+                <span class="line-badge line-suin">水仁・盆唐線 ソウルの森駅</span>
+              </div>
+              <div class="spot-content-grid">
+                <div class="spot-details">
+                  <h4>🚶 おすすめ最寄り出口</h4>
+                  <ul>
+                    <li><strong>2号線 聖水駅 3・4番出口:</strong> カフェ通り（Cafe Onion、Dior聖水ポップアップなど）の中心。</li>
+                    <li><strong>水仁・盆唐線 ソウルの森駅 5番出口:</strong> アトリエ通り、SMエンタ本社、ソウルの森散策路方面。</li>
+                  </ul>
+                </div>
+                <div class="spot-route">
+                  <h4>🚆 明洞（乙支路）からのアクセス</h4>
+                  <p>地下鉄2号線「乙支路入口駅」から乗車し、内回り方面へ約15分。乗換なしでダイレクトに聖水駅へ到着します。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 관광지 4: 강남 -->
+          <div role="tabpanel" 
+               id="panel-spot-gangnam" 
+               class="tab-panel" 
+               aria-labelledby="tab-spot-gangnam" 
+               tabindex="0" 
+               hidden>
+            <div class="spot-card">
+              <div class="spot-header">
+                <h3>강남 (江南 / カンナム) - ビル群・美容クリニック・大型ショッピング</h3>
+                <span class="line-badge line-2">2号線 江南駅 (222)</span>
+                <span class="line-badge line-sinbundang">新盆唐線 江南駅</span>
+              </div>
+              <div class="spot-content-grid">
+                <div class="spot-details">
+                  <h4>🚶 おすすめ最寄り出口</h4>
+                  <ul>
+                    <li><strong>10番・11番出口:</strong> 江南メイン通り！カカオフレンズショップ、映画館、飲食店が密集。</li>
+                    <li><strong>地下街出口:</strong> 「江南駅地下ショッピングセンター（地下街）」はプチプラ洋服やスマホケースの宝庫。</li>
+                  </ul>
+                </div>
+                <div class="spot-route">
+                  <h4>🚆 弘大・明洞からのアクセス</h4>
+                  <p>弘大入口駅から2号線で約35分。明洞エリア（乙支路入口駅）からは2号線で約30分で到着します。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Web Speech API (TTS) 음성 지원 한국어 필수 회화 섹션 -->
+    <section class="phrases-section" id="phrases-section" aria-labelledby="phrases-title">
+      <div class="section-container">
+        <span class="section-badge">Audio Pronunciation</span>
+        <h2 id="phrases-title" class="section-title">交通ですぐ使える！実践韓国語音声フレーズ</h2>
+        <p class="section-subtitle">
+          「🔊 発音を聞く」ボタンを押すと、ネイティブの発音（Web Speech API）が流れます。駅員さんや運転手さんに見せるだけでも通じます。
+        </p>
+
+        <div class="phrase-grid">
+          <!-- 회화 카드 1 -->
+          <article class="phrase-card">
+            <div class="phrase-header">
+              <span class="phrase-category">チャージ (충전)</span>
+              <button type="button" class="btn-tts" data-speech="교통카드 충전해 주세요" aria-label="「교통카드 충전해 주세요」の音声を聞く">
+                <span class="tts-icon" aria-hidden="true">🔊</span> 発音を聞く
+              </button>
+            </div>
+            <div class="phrase-body">
+              <p class="phrase-korean" lang="ko">교통카드 충전해 주세요.</p>
+              <p class="phrase-kana">キョトンカドゥ チュンジョンヘ ジュセヨ</p>
+              <p class="phrase-meaning">T-moneyカードのチャージをお願いします。</p>
+              <p class="phrase-tip">💡 コンビニのレジでカードとチャージ現金を差し出しながらこのフレーズを言えばOK！</p>
+            </div>
+          </article>
+
+          <!-- 회화 카드 2 -->
+          <article class="phrase-card">
+            <div class="phrase-header">
+              <span class="phrase-category">バス行き先 (목적지 확인)</span>
+              <button type="button" class="btn-tts" data-speech="이 버스 명동 가나요?" aria-label="「이 버스 명동 가나요?」の音声を聞く">
+                <span class="tts-icon" aria-hidden="true">🔊</span> 発音を聞く
+              </button>
+            </div>
+            <div class="phrase-body">
+              <p class="phrase-korean" lang="ko">이 버스 명동 가나요?</p>
+              <p class="phrase-kana">イ ポス ミョンドン カナヨ？</p>
+              <p class="phrase-meaning">このバスは明洞（ミョンドン）に行きますか？</p>
+              <p class="phrase-tip">💡 「명동（明洞）」の部分を行きたい場所の名前に変えて使えます（例：홍대 / ホンデ）。</p>
+            </div>
+          </article>
+
+          <!-- 회화 카드 3 -->
+          <article class="phrase-card">
+            <div class="phrase-header">
+              <span class="phrase-category">タクシー降車 (하차 요청)</span>
+              <button type="button" class="btn-tts" data-speech="여기서 내려주세요" aria-label="「여기서 내려주세요」の音声を聞く">
+                <span class="tts-icon" aria-hidden="true">🔊</span> 発音を聞く
+              </button>
+            </div>
+            <div class="phrase-body">
+              <p class="phrase-korean" lang="ko">여기서 내려주세요.</p>
+              <p class="phrase-kana">ヨギソ ネリョジュセヨ</p>
+              <p class="phrase-meaning">ここで降ろしてください。</p>
+              <p class="phrase-tip">💡 タクシーで目的地の近くに着いたときや、路肩に停めてほしいときに役立ちます。</p>
+            </div>
+          </article>
+
+          <!-- 회화 카드 4 -->
+          <article class="phrase-card">
+            <div class="phrase-header">
+              <span class="phrase-category">改札トラブル (개찰구 오류)</span>
+              <button type="button" class="btn-tts" data-speech="카드가 안 찍혀요" aria-label="「카드가 안 찍혀요」の音声を聞く">
+                <span class="tts-icon" aria-hidden="true">🔊</span> 発音を聞く
+              </button>
+            </div>
+            <div class="phrase-body">
+              <p class="phrase-korean" lang="ko">카드가 안 찍혀요.</p>
+              <p class="phrase-kana">カドゥガ アン チッキョヨ</p>
+              <p class="phrase-meaning">カードが改札で反応しません（タッチできません）。</p>
+              <p class="phrase-tip">💡 改札横の非常ゲートにあるインターホン（ヘルプボタン）を押して駅員さんに伝えましょう。</p>
+            </div>
+          </article>
+
+          <!-- 회화 카드 5 -->
+          <article class="phrase-card">
+            <div class="phrase-header">
+              <span class="phrase-category">乗り換え場所 (환승 위치)</span>
+              <button type="button" class="btn-tts" data-speech="환승은 어디서 하나요?" aria-label="「환승은 어디서 하나요?」の音声を聞く">
+                <span class="tts-icon" aria-hidden="true">🔊</span> 発音を聞く
+              </button>
+            </div>
+            <div class="phrase-body">
+              <p class="phrase-korean" lang="ko">환승은 어디서 하나요?</p>
+              <p class="phrase-kana">ファンスンウン オディソ ハナヨ？</p>
+              <p class="phrase-meaning">乗り換えはどこでしますか？</p>
+              <p class="phrase-tip">💡 大きな駅で乗り換え通路に迷った時、通行人や駅員さんに尋ねるのに最適です。</p>
+            </div>
+          </article>
+
+          <!-- 회화 카드 6 -->
+          <article class="phrase-card">
+            <div class="phrase-header">
+              <span class="phrase-category">タクシー決済 (영수증 요청)</span>
+              <button type="button" class="btn-tts" data-speech="영수증 주세요" aria-label="「영수증 주세요」の音声を聞く">
+                <span class="tts-icon" aria-hidden="true">🔊</span> 発音を聞く
+              </button>
+            </div>
+            <div class="phrase-body">
+              <p class="phrase-korean" lang="ko">영수증 주세요.</p>
+              <p class="phrase-kana">ヨンスジュン ジュセヨ</p>
+              <p class="phrase-meaning">領収書（レシート）をください。</p>
+              <p class="phrase-tip">💡 タクシー降車時に忘れ物をした際の命綱になります。必ず受け取りましょう。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 우측 하단 플로팅 버튼 (FAB) & 미니 팝업 위젯 -->
+  <aside class="fab-container" aria-label="クイックツール ウィジェット">
+    <!-- 미니 팝업창 -->
+    <div class="fab-popup" id="fab-popup" role="region" aria-label="クイック運賃計算機とFAQ" hidden>
+      <div class="fab-popup-header">
+        <h3 class="fab-popup-title">🧮 運賃計算 &amp; FAQ</h3>
+        <button type="button" class="btn-popup-close" id="close-fab-popup" aria-label="クイックツールを閉じる">×</button>
+      </div>
+      <div class="fab-popup-body">
+        <!-- 簡易 지하철 요금 계산기 -->
+        <div class="fare-calc-box">
+          <label for="calc-distance" class="calc-label">乗車距離の目安（km）:</label>
+          <div class="calc-input-group">
+            <input type="number" id="calc-distance" min="1" max="100" value="10" step="1">
+            <span class="unit">km</span>
+            <button type="button" id="btn-calc-fare" class="btn btn-sm btn-primary">計算</button>
+          </div>
+          <div class="calc-result" id="calc-result-text" aria-live="polite">
+            予想カード運賃: <strong>1,400 ウォン</strong> (基本料金内)
+          </div>
+          <small class="calc-note">※10kmまで1,400ウォン、以降5kmごとに100ウォン加算</small>
+        </div>
+
+        <hr class="popup-divider">
+
+        <!-- 자주 묻는 질문 FAQ -->
+        <details class="faq-accordion">
+          <summary>T-moneyカードの残高は返金できますか？</summary>
+          <p>はい。コンビニで残高20,000ウォン以下なら手数料500ウォンを引いて即時現金で払い戻し可能です（カード本体代は返金不可）。</p>
+        </details>
+        <details class="faq-accordion">
+          <summary>子ども料金はどうなりますか？</summary>
+          <p>満6歳〜12歳は「어린이 (オリニ / 小児)」運賃（地下鉄500ウォン、バス550ウォン）。コンビニでパスポートを提示して登録が必要です。</p>
+        </details>
+      </div>
+    </div>
+
+    <!-- 플로팅 액션 버튼 (FAB) -->
+    <button type="button" 
+            class="fab-trigger-btn" 
+            id="fab-trigger-btn" 
+            aria-expanded="false" 
+            aria-controls="fab-popup" 
+            aria-label="クイック運賃計算とよくある質問を開く">
+      <span class="fab-icon" aria-hidden="true">🧮</span>
+      <span class="fab-label">運賃計算&amp;FAQ</span>
+    </button>
+  </aside>
+
+  <!-- 긴급 지원 & 도난/분실 안내 모달 팝업 (포커스 트랩 적용) -->
+  <div class="modal-backdrop" id="emergency-modal-backdrop" hidden>
+    <div class="modal-dialog" 
+         id="emergency-modal" 
+         role="dialog" 
+         aria-modal="true" 
+         aria-labelledby="emergency-modal-title">
+      
+      <div class="modal-header">
+        <div class="modal-title-box">
+          <span class="modal-badge-alert" aria-hidden="true">🚨 EMERGENCY</span>
+          <h2 id="emergency-modal-title" class="modal-title">緊急サポート＆盗難・紛失物案内</h2>
+        </div>
+        <button type="button" class="btn-modal-close" id="close-emergency-modal" aria-label="緊急サポート案内を閉じる">
+          &times;
+        </button>
+      </div>
+
+      <div class="modal-content">
+        <!-- 1330 観光通訳案内電話 -->
+        <div class="emergency-item primary-alert">
+          <div class="emergency-icon-col" aria-hidden="true">☎️</div>
+          <div class="emergency-text-col">
+            <h3>韓国観光公社 観光通訳案内電話 <span class="phone-number">1330</span></h3>
+            <p><strong>日本語完全対応・24時間年中無休・通話料無料アプリあり</strong></p>
+            <p class="emergency-desc">道に迷ったとき、駅員やタクシー運転手との通訳が必要なとき、観光中のトラブル時にいつでも日本語オペレーターが対応してくれます。</p>
+            <a href="tel:1330" class="btn btn-call">📞 今すぐ 1330 に発信する</a>
+          </div>
+        </div>
+
+        <!-- 112 警察 & 119 救急 -->
+        <div class="emergency-item">
+          <div class="emergency-icon-col" aria-hidden="true">🚓</div>
+          <div class="emergency-text-col">
+            <h3>警察: <span class="phone-number">112</span> / 救急・消防: <span class="phone-number">119</span></h3>
+            <p class="emergency-desc">事件・事故・盗難被害は112へ。日本語通訳サービス（三者通話）が提供されます。</p>
+          </div>
+        </div>
+
+        <!-- 紛失物センター利用案内 -->
+        <div class="emergency-item">
+          <div class="emergency-icon-col" aria-hidden="true">🧳</div>
+          <div class="emergency-text-col">
+            <h3>地下鉄・バスで忘れ物をした時の対処法</h3>
+            <ol class="emergency-steps">
+              <li><strong>地下鉄の場合:</strong> 乗っていた列車の「号線・乗車時刻・車両番号（ドア付近の数字）」を確認し、駅事務室または地下鉄遺失物センターへ申告。</li>
+              <li><strong>タクシーの場合:</strong> 領収書に記載された「事業者電話番号」または120タサンコールセンターへ連絡。</li>
+              <li><strong>警察庁紛失物ポータル (LOST112):</strong> 全国で届け出られた遺失物を検索可能（<a href="https://www.lost112.go.kr" target="_blank" rel="noopener noreferrer">lost112.go.kr</a>）。</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="confirm-modal-btn">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 푸터 영역 -->
+  <footer class="site-footer">
+    <div class="section-container footer-content">
+      <div class="footer-info">
+        <p class="footer-logo">🇰🇷 韓国公共交通 完全攻略ガイド</p>
+        <p class="footer-sub">日本人観光客のためのスマートな韓国移動支援ポータル</p>
+        <p class="footer-ref">参考公的機関: ソウル交通公社 (Seoul Metro) / 韓国観光公社 (Visit Korea) / ソウル市交通情報 (TOPIS)</p>
+      </div>
+      <p class="footer-copy">&copy; 2026 K-Transit Guide. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Custom JavaScript -->
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
