@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모바일 청첩장</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: #f7f5f0;
+            color: #4a4a4a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        /* 스마트폰 화면 프레임 */
+        .mobile-container {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow-x: hidden;
+        }
+        @media (min-width: 421px) {
+            .mobile-container {
+                min-height: 90vh;
+                border-radius: 20px;
+                margin: 20px 0;
+            }
+        }
+        /* 메인 커버 이미지 영역 */
+        .cover-section {
+            position: relative;
+            width: 100%;
+            height: 550px;
+        }
+        .cover-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .cover-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0));
+        }
+        /* 본문 내용 영역 */
+        .content-section {
+            padding: 20px 30px 50px 30px;
+            text-align: center;
+            background: #ffffff;
+            margin-top: -30px;
+            position: relative;
+            z-index: 2;
+        }
+        .names {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c2c2c;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+        .date-location {
+            font-size: 15px;
+            color: #777;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        .divider {
+            width: 40px;
+            height: 1px;
+            background-color: #d1c7bd;
+            margin: 30px auto;
+        }
+        /* 문구 영역 (문구.txt 내용 반영) */
+        .greeting-box {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 40px;
+            white-space: pre-line; /* 줄바꿈 유지 */
+        }
+        /* 실시간 카운트다운 영역 */
+        .countdown-container {
+            background: #f9f8f6;
+            padding: 25px 15px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border: 1px solid #eee;
+        }
+        .countdown-title {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        .countdown-timers {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        .time-box span {
+            display: block;
+        }
+        .time-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .time-label {
+            font-size: 12px;
+            color: #999;
+        }
+        /* 갤러리 사진 추가 영역 */
+        .gallery-section {
+            margin-bottom: 40px;
+        }
+        .gallery-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .gallery-img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        /* 하단 연락처 및 안내 */
+        .info-section {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .footer {
+            font-size: 12px;
+            color: #aaa;
+            padding-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        <!-- 1. 메인 커버 사진 (pictures 폴더 내부 이미지 연동) -->
+        <div class="cover-section">
+            <img src="pictures/photo1.jpg" alt="웨딩 대표 사진">
+            <div class="cover-overlay"></div>
+        </div>
+
+        <!-- 2. 핵심 정보 및 문구 영역 -->
+        <div class="content-section">
+            <div class="names">김민수 &middot; 이서연</div>
+            <div class="date-location">
+                2026년 10월 20일 화요일 오후 2시<br>
+                더 그레이스 웨딩홀 3층 그랜드홀
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- 문구.txt 파일의 내용을 여기에 담습니다 -->
+            <div class="greeting-box">
+                소중한 분들을 모십니다.
+
+                서로 다른 길을 걸어온 두 사람이
+                이제 사랑과 믿음으로 한 길을 걸어가고자 합니다.
+                
+                기쁜 날, 함께 자리하셔서
+                저희의 앞날을 따뜻한 마음으로 축복해 주시면
+                더없는 기쁨으로 간직하겠습니다.
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- 3. 실시간 카운트다운 애니메이션 영역 -->
+            <div class="countdown-container">
+                <div class="countdown-title">민수 ❤️ 서연의 결혼식이 <strong><span id="dDayText"></span></strong> 남았습니다</div>
+                <div class="countdown-timers">
+                    <div class="time-box">
+                        <span class="time-number" id="days">00</span>
+                        <span class="time-label">일</span>
+                    </div>
+                    <div class="time-box">
+                        <span class="time-number" id="hours">00</span>
+                        <span class="time-label">시간</span>
+                    </div>
+                    <div class="time-box">
+                        <span class="time-number" id="minutes">00</span>
+                        <span class="time-label">분</span>
+                    </div>
+                    <div class="time-box">
+                        <span class="time-number" id="seconds">00</span>
+                        <span class="time-label">초</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. 갤러리 추가 사진 영역 (pictures 폴더 내 사진 활용) -->
+            <div class="gallery-section">
+                <h3>Our Gallery</h3>
+                <img src="pictures/photo2.jpg" alt="갤러리 사진 1" class="gallery-img">
+                <img src="pictures/photo3.jpg" alt="갤러리 사진 2" class="gallery-img">
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="info-section">
+                <strong>오시는 길</strong><br>
+                서울 강남구 테헤란로 123 (역삼동)<br>
+                지하철 2호선 역삼역 3번 출구 도보 5분
+            </div>
+
+            <div class="footer">
+                Thank You
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 결혼식 날짜 설정 (예: 2026년 10월 20일 14:00:00)
+        const weddingDate = new Date('2026-10-20T14:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            const dDayText = document.getElementById('dDayText');
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+
+            if (distance < 0) {
+                dDayText.innerText = "오늘입니다!";
+                daysEl.innerText = "00";
+                hoursEl.innerText = "00";
+                minutesEl.innerText = "00";
+                secondsEl.innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            dDayText.innerText = `D-${days}`;
+            daysEl.innerText = String(days).padStart(2, '0');
+            hoursEl.innerText = String(hours).padStart(2, '0');
+            minutesEl.innerText = String(minutes).padStart(2, '0');
+            secondsEl.innerText = String(seconds).padStart(2, '0');
+        }
+
+        // 1초마다 실시간 카운트다운 갱신
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
