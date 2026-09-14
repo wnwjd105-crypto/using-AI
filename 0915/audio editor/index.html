@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>웹 오디오 편집기</title>
+    <!-- MP3 인코딩용 lamejs CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .upload-box {
+            border: 2px dashed rgba(255,255,255,0.4);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            background: rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 20px;
+        }
+        .upload-box:hover {
+            background: rgba(0,0,0,0.25);
+        }
+        .upload-box input {
+            display: none;
+        }
+        .file-info {
+            font-size: 14px;
+            color: #00ffcc;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .editor-section {
+            display: none;
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #ddd;
+        }
+        input[type="range"] {
+            width: 100%;
+            accent-color: #00ffcc;
+            cursor: pointer;
+        }
+        .trim-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        .trim-inputs input[type="number"] {
+            width: 50%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.3);
+            color: white;
+            text-align: center;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.3);
+            color: white;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #00ffcc;
+            color: #111;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 4px 15px rgba(0, 255, 204, 0.3);
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #loading {
+            text-align: center;
+            margin-top: 15px;
+            color: #ff4757;
+            font-weight: bold;
+            display: none;
+        }
+        audio {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🎵 웹 오디오 편집기</h2>
+        
+        <label class="upload-box">
+            <p>📁 오디오 파일을 업로드하세요 (MP3, WAV 등)</p>
+            <input type="file" id="audioInput" accept="audio/*">
+        </label>
+
+        <div class="file-info" id="fileInfo">선택된 파일 없음</div>
+
+        <div class="editor-section" id="editorSection">
+            <!-- 1. 볼륨 조절 -->
+            <div class="control-group">
+                <label>
+                    <span>볼륨 조절</span>
+                    <span id="volumeVal">100%</span>
+                </label>
+                <input type="range" id="volumeRange" min="0" max="200" value="100">
+            </div>
+
+            <!-- 2. 구간 트림 -->
+            <div class="control-group">
+                <label>구간 자르기 (초 단위)</label>
+                <div class="trim-inputs">
+                    <input type="number" id="startTime" placeholder="시작 (초)" value="0" step="0.1" min="0">
+                    <input type="number" id="endTime" placeholder="종료 (초)" value="0" step="0.1" min="0">
+                </div>
+            </div>
+
+            <!-- 3. 포맷 변환 -->
+            <div class="control-group">
+                <label for="formatSelect">출력 포맷 변환</label>
+                <select id="formatSelect">
+                    <option value="wav">WAV (무손실)</option>
+                    <option value="mp3">MP3 (압축)</option>
+                </select>
+            </div>
+
+            <button id="processBtn">오디오 편집 및 변환 적용</button>
+            <div id="loading">오디오를 처리 중입니다...</div>
+
+            <!-- 결과 미리보기 및 다운로드 -->
+            <audio id="audioPreview" controls style="display:none;"></audio>
+            <a id="downloadLink" style="display:none; margin-top: 10px; display: block; text-align: center; color: #00ffcc; text-decoration: underline; font-weight: bold;">변환된 파일 다운로드</a>
+        </div>
+    </div>
+
+    <script>
+        const audioInput = document.getElementById('audioInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const editorSection = document.getElementById('editorSection');
+        const volumeRange = document.getElementById('volumeRange');
+        const volumeVal = document.getElementById('volumeVal');
+        const startTimeInput = document.getElementById('startTime');
+        const endTimeInput = document.getElementById('endTime');
+        const formatSelect = document.getElementById('formatSelect');
+        const processBtn = document.getElementById('processBtn');
+        const loadingEl = document.getElementById('loading');
+        const audioPreview = document.getElementById('audioPreview');
+        const downloadLink = document.getElementById('downloadLink');
+
+        let audioContext = null;
+        let originalAudioBuffer = null;
+        let selectedFileName = '';
+
+        volumeRange.addEventListener('input', (e) => {
+            volumeVal.innerText = `${e.target.value}%`;
+        });
+
+        audioInput.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            selectedFileName = file.name.substring(0, file.name.lastIndexOf('.')) || 'audio';
+            fileInfo.innerText = `선택된 파일: ${file.name}`;
+            loadingEl.style.display = 'block';
+            loadingEl.innerText = '오디오 파일을 로딩 중입니다...';
+
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                originalAudioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+                // UI 초기화
+                const duration = originalAudioBuffer.duration;
+                startTimeInput.value = 0;
+                endTimeInput.value = duration.toFixed(1);
+                endTimeInput.max = duration.toFixed(1);
+
+                editorSection.style.display = 'block';
+                loadingEl.style.display = 'none';
+            } catch (err) {
+                console.error(err);
+                alert('오디오 파일을 디코딩하는 데 실패했습니다.');
+                loadingEl.style.display = 'none';
+            }
+        });
+
+        processBtn.addEventListener('click', async function() {
+            if (!originalAudioBuffer) return;
+
+            loadingEl.style.display = 'block';
+            loadingEl.innerText = '오디오 편집 및 변환 작업을 수행 중입니다...';
+            processBtn.disabled = true;
+
+            try {
+                const start = parseFloat(startTimeInput.value) || 0;
+                const end = parseFloat(endTimeInput.value) || originalAudioBuffer.duration;
+                const volume = parseFloat(volumeRange.value) / 100;
+                const format = formatSelect.value;
+
+                const sampleRate = originalAudioBuffer.sampleRate;
+                const startSample = Math.floor(start * sampleRate);
+                const endSample = Math.floor(end * sampleRate);
+                const frameCount = Math.max(1, endSample - startSample);
+                const numberOfChannels = originalAudioBuffer.numberOfChannels;
+
+                // 새로운 잘린 버퍼 생성
+                const trimmedBuffer = audioContext.createBuffer(numberOfChannels, frameCount, sampleRate);
+
+                for (let channel = 0; channel < numberOfChannels; channel++) {
+                    const originalData = originalAudioBuffer.getChannelData(channel);
+                    const trimmedData = trimmedBuffer.getChannelData(channel);
+                    for (let i = 0; i < frameCount; i++) {
+                        // 볼륨 조절 적용 및 복사
+                        trimmedData[i] = (originalData[startSample + i] || 0) * volume;
+                    }
+                }
+
+                let blob, mimeType, extension;
+
+                if (format === 'wav') {
+                    const wavBytes = audioBufferToWav(trimmedBuffer);
+                    blob = new Blob([wavBytes], { type: 'audio/wav' });
+                    extension = 'wav';
+                } else {
+                    // MP3 변환
+                    blob = encodeMp3(trimmedBuffer);
+                    extension = 'mp3';
+                }
+
+                const audioUrl = URL.createObjectURL(blob);
+                audioPreview.src = audioUrl;
+                audioPreview.style.display = 'block';
+
+                downloadLink.href = audioUrl;
+                downloadLink.download = `${selectedFileName}_edited.${extension}`;
+                downloadLink.style.display = 'block';
+                downloadLink.innerText = `${selectedFileName}_edited.${extension} 다운로드`;
+
+            } catch (err) {
+                console.error(err);
+                alert('오디오 처리 중 오류가 발생했습니다.');
+            } finally {
+                loadingEl.style.display = 'none';
+                processBtn.disabled = false;
+            }
+        });
+
+        // AudioBuffer를 WAV 파일 형식의 ArrayBuffer로 변환하는 헬퍼 함수
+        function audioBufferToWav(buffer) {
+            const numOfChan = buffer.numberOfChannels;
+            const sampleRate = buffer.sampleRate;
+            const format = 1; // PCM
+            const bitDepth = 16;
+
+            let result;
+            if (numOfChan === 2) {
+                result = interleave(buffer.getChannelData(0), buffer.getChannelData(1));
+            } else {
+                result = buffer.getChannelData(0);
+            }
+
+            const dataLength = result.length * (bitDepth / 8);
+            const headerLength = 44;
+            const wav = new ArrayBuffer(headerLength + dataLength);
+            const view = new DataView(wav);
+
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + dataLength, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, format, true);
+            view.setUint16(22, numOfChan, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * numOfChan * (bitDepth / 8), true);
+            view.setUint16(32, numOfChan * (bitDepth / 8), true);
+            view.setUint16(34, bitDepth, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, dataLength, true);
+
+            let offset = 44;
+            for (let i = 0; i < result.length; i++, offset += 2) {
+                let s = Math.max(-1, Math.min(1, result[i]));
+                view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+            }
+
+            return wav;
+        }
+
+        function interleave(inputL, inputR) {
+            const length = inputL.length + inputR.length;
+            const result = new Float32Array(length);
+            let index = 0;
+            for (let i = 0; i < inputL.length; i++) {
+                result[index++] = inputL[i];
+                result[index++] = inputR[i];
+            }
+            return result;
+        }
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+
+        // lamejs를 활용한 MP3 인코딩 함수
+        function encodeMp3(buffer) {
+            const channels = buffer.numberOfChannels;
+            const sampleRate = buffer.sampleRate;
+            const mp3encoder = new lamejs.Mp3Encoder(channels, sampleRate, 128);
+            const sampleBlockSize = 1152;
+            
+            const left = buffer.getChannelData(0);
+            const right = channels > 1 ? buffer.getChannelData(1) : left;
+
+            const mp3Data = [];
+
+            const sampleCount = left.length;
+            let remaining = sampleCount;
+
+            // Float32 샘플을 16비트 PCM 정수로 변환
+            const pcmLeft = new Int16Array(sampleCount);
+            const pcmRight = new Int16Array(sampleCount);
+
+            for (let i = 0; i < sampleCount; i++) {
+                pcmLeft[i] = Math.max(-1, Math.min(1, left[i])) * 0x7FFF;
+                pcmRight[i] = Math.max(-1, Math.min(1, right[i])) * 0x7FFF;
+            }
+
+            let index = 0;
+            while (remaining >= sampleBlockSize) {
+                const chunkLeft = pcmLeft.subarray(index, index + sampleBlockSize);
+                const chunkRight = pcmRight.subarray(index, index + sampleBlockSize);
+                
+                let mp3buf;
+                if (channels === 1) {
+                    mp3buf = mp3encoder.encodeBuffer(chunkLeft);
+                } else {
+                    mp3buf = mp3encoder.encodeBuffer(chunkLeft, chunkRight);
+                }
+                
+                if (mp3buf.length > 0) {
+                    mp3Data.push(mp3buf);
+                }
+                
+                index += sampleBlockSize;
+                remaining -= sampleBlockSize;
+            }
+
+            const mp3buf = mp3encoder.flush();
+            if (mp3buf.length > 0) {
+                mp3Data.push(mp3buf);
+            }
+
+            return new Blob(mp3Data, { type: 'audio/mp3' });
+        }
+    </script>
+</body>
+</html>
