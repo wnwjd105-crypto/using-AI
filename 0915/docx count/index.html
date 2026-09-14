@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문서 분석기 (PDF & DOCX)</title>
+    <!-- 외부 라이브러리 CDN: PDF.js 및 mammoth.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 550px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .upload-box {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 20px;
+        }
+        .upload-box:hover {
+            background: #e9ecef;
+        }
+        .upload-box input {
+            display: none;
+        }
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+            font-weight: bold;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            text-align: center;
+        }
+        .stat-box.img {
+            border-left-color: #e67e22;
+        }
+        .stat-title {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        #loading {
+            text-align: center;
+            margin-top: 15px;
+            color: #e67e22;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>문서 분석기 (PDF / DOCX)</h2>
+        
+        <label class="upload-box" id="dropZone">
+            <p>📁 PDF 또는 DOCX 파일을 여기에 드래그하거나 클릭하여 업로드하세요</p>
+            <input type="file" id="fileInput" accept=".pdf,.docx">
+            <div class="file-name" id="fileName">선택된 파일 없음</div>
+        </label>
+
+        <div id="loading">문서를 분석 중입니다... 잠시만 기다려주세요.</div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-title">공백 포함 글자 수</div>
+                <div class="stat-value" id="charWithSpace">0자</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">공백 제외 글자 수</div>
+                <div class="stat-value" id="charNoSpace">0자</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">공백 개수</div>
+                <div class="stat-value" id="spaceCount">0개</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">단어 수</div>
+                <div class="stat-value" id="wordCount">0개</div>
+            </div>
+            <div class="stat-box img" style="grid-column: span 2;">
+                <div class="stat-title">이미지 개수</div>
+                <div class="stat-value" id="imageCount">0개</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const fileInput = document.getElementById('fileInput');
+        const fileNameEl = document.getElementById('fileName');
+        const loadingEl = document.getElementById('loading');
+
+        fileInput.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            fileNameEl.innerText = file.name;
+            loadingEl.style.display = 'block';
+
+            try {
+                const extension = file.name.split('.').pop().toLowerCase();
+                let text = '';
+                let imageCount = 0;
+
+                if (extension === 'pdf') {
+                    const result = await parsePDF(file);
+                    text = result.text;
+                    imageCount = result.imageCount;
+                } else if (extension === 'docx') {
+                    const result = await parseDOCX(file);
+                    text = result.text;
+                    imageCount = result.imageCount;
+                } else {
+                    alert('지원하지 않는 파일 형식입니다. PDF 또는 DOCX 파일을 업로드해주세요.');
+                    loadingEl.style.display = 'none';
+                    return;
+                }
+
+                updateStats(text, imageCount);
+            } catch (error) {
+                console.error(error);
+                alert('파일을 분석하는 중 오류가 발생했습니다.');
+            } finally {
+                loadingEl.style.display = 'none';
+            }
+        });
+
+        // PDF 분석 로직
+        async function parsePDF(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let fullText = '';
+            let imgCount = 0;
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                
+                // 텍스트 추출
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                fullText += pageText + ' ';
+
+                // 이미지 개수 추출 (OperatorList 활용)
+                const operatorList = await page.getOperatorList();
+                for (let j = 0; j < operatorList.fnArray.length; j++) {
+                    // pdf.js 연산자 중 이미지 관련 코드 (paintImageXObject 등)
+                    if (operatorList.fnArray[j] === pdfjsLib.OPS.paintImageXObject || 
+                        operatorList.fnArray[j] === pdfjsLib.OPS.paintInlineImageXObject) {
+                        imgCount++;
+                    }
+                }
+            }
+            return { text: fullText.trim(), imageCount: imgCount };
+        }
+
+        // DOCX 분석 로직
+        async function parseDOCX(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            let imgCount = 0;
+
+            // mammoth를 이용해 이미지 개수 카운트 및 텍스트 추출
+            const options = {
+                convertImage: mammoth.images.imgElement(function(image) {
+                    imgCount++;
+                    return image.read("base64").then(function(imageBuffer) {
+                        return { src: "data:" + image.contentType + ";base64," + imageBuffer };
+                    });
+                })
+            };
+
+            const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer }, options);
+            // mammoth 기본 텍스트 추출 외에 이미지 감지를 위한 변환 호출
+            await mammoth.convertToHtml({ arrayBuffer: arrayBuffer }, options);
+
+            return { text: result.value.trim(), imageCount: imgCount };
+        }
+
+        // 통계 계산 및 화면 반영 함수
+        function updateStats(text, imageCount) {
+            const charWithSpace = text.length;
+            const spaces = (text.match(/\s/g) || []).length;
+            const charNoSpace = charWithSpace - spaces;
+            
+            // 단어 수 (공백 기준 분할)
+            const words = text === '' ? [] : text.trim().split(/\s+/);
+            const wordCount = text === '' ? 0 : words.length;
+
+            document.getElementById('charWithSpace').innerText = `${charWithSpace.toLocaleString()}자`;
+            document.getElementById('charNoSpace').innerText = `${charNoSpace.toLocaleString()}자`;
+            document.getElementById('spaceCount').innerText = `${spaces.toLocaleString()}개`;
+            document.getElementById('wordCount').innerText = `${wordCount.toLocaleString()}개`;
+            document.getElementById('imageCount').innerText = `${imageCount.toLocaleString()}개`;
+        }
+    </script>
+</body>
+</html>
