@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TextRank 문서 요약기</title>
+    <!-- PDF.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <!-- Mammoth.js (DOCX 파서) CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.18/mammoth.browser.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 650px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .upload-box {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 20px;
+        }
+        .upload-box:hover {
+            background: #e9ecef;
+        }
+        .upload-box input {
+            display: none;
+        }
+        .file-info {
+            font-size: 14px;
+            color: #2980b9;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .slider-group {
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        input[type="range"] {
+            width: 100%;
+            accent-color: #3498db;
+            cursor: pointer;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .result-box {
+            margin-top: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            display: none;
+        }
+        .result-box h3 {
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+        .summary-list {
+            list-style-type: decimal;
+            padding-left: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #444;
+        }
+        .summary-list li {
+            margin-bottom: 8px;
+        }
+        #loading {
+            text-align: center;
+            margin-top: 15px;
+            color: #e67e22;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>📄 TextRank 문서 요약기</h2>
+        
+        <label class="upload-box">
+            <p>PDF 또는 DOCX 파일을 업로드하세요</p>
+            <input type="file" id="fileInput" accept=".pdf,.docx">
+        </label>
+
+        <div class="file-info" id="fileInfo">선택된 파일 없음</div>
+
+        <div class="slider-group">
+            <label for="sentenceCount">
+                <span>요약 문장 수</span>
+                <span id="sliderValue">3 문장</span>
+            </label>
+            <input type="range" id="sentenceCount" min="1" max="5" value="3">
+        </div>
+
+        <button id="summarizeBtn" disabled>TextRank 요약 시작하기</button>
+        <div id="loading">문서를 분석하고 TextRank 알고리즘을 수행 중입니다...</div>
+
+        <div class="result-box" id="resultBox">
+            <h3>핵심 요약 결과</h3>
+            <ol class="summary-list" id="summaryList"></ol>
+        </div>
+    </div>
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const sentenceCount = document.getElementById('sentenceCount');
+        const sliderValue = document.getElementById('sliderValue');
+        const summarizeBtn = document.getElementById('summarizeBtn');
+        const loadingEl = document.getElementById('loading');
+        const resultBox = document.getElementById('resultBox');
+        const summaryList = document.getElementById('summaryList');
+
+        let extractedText = '';
+
+        // 슬라이더 값 변경 실시간 반영
+        sentenceCount.addEventListener('input', (e) => {
+            sliderValue.innerText = `${e.target.value} 문장`;
+        });
+
+        // 파일 업로드 처리
+        fileInput.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            fileInfo.innerText = `선택된 파일: ${file.name}`;
+            loadingEl.style.display = 'block';
+            loadingEl.innerText = '파일을 읽는 중입니다...';
+            summarizeBtn.disabled = true;
+
+            try {
+                if (file.name.endsWith('.pdf')) {
+                    extractedText = await extractTextFromPDF(file);
+                } else if (file.name.endsWith('.docx')) {
+                    extractedText = await extractTextFromDOCX(file);
+                } else {
+                    alert('지원하지 않는 파일 형식입니다. (.pdf 또는 .docx 파일만 가능)');
+                    fileInfo.innerText = '선택된 파일 없음';
+                    fileInput.value = '';
+                    loadingEl.style.display = 'none';
+                    return;
+                }
+
+                if (extractedText.trim().length === 0) {
+                    alert('문서에서 텍스트를 추출할 수 없습니다.');
+                    summarizeBtn.disabled = true;
+                } else {
+                    summarizeBtn.disabled = false;
+                }
+            } catch (err) {
+                console.error(err);
+                alert('파일을 읽는 도중 오류가 발생했습니다.');
+            } finally {
+                loadingEl.style.display = 'none';
+            }
+        });
+
+        async function extractTextFromPDF(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let fullText = '';
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                fullText += pageText + '\n';
+            }
+            return fullText;
+        }
+
+        async function extractTextFromDOCX(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+            return result.value;
+        }
+
+        // 요약 버튼 클릭
+        summarizeBtn.addEventListener('click', () => {
+            const targetCount = parseInt(sentenceCount.value);
+            loadingEl.style.display = 'block';
+            loadingEl.innerText = 'TextRank 알고리즘 계산 중...';
+            resultBox.style.display = 'none';
+
+            setTimeout(() => {
+                try {
+                    const summary = textRankSummarize(extractedText, targetCount);
+                    displaySummary(summary);
+                } catch (e) {
+                    console.error(e);
+                    alert('요약 과정에서 오류가 발생했습니다.');
+                } finally {
+                    loadingEl.style.display = 'none';
+                }
+            }, 50);
+        });
+
+        // 텍스트랭크(TextRank) 요약 구현 핵심 로직
+        function textRankSummarize(text, numSentences) {
+            // 1. 문장 분리 (한국어/영어 구두점 기준)
+            let sentences = text.match(/[^.!?\n]+[.!?\n]+/g) || [text];
+            sentences = sentences.map(s => s.trim()).filter(s => s.length > 5);
+
+            if (sentences.length <= numSentences) {
+                return sentences;
+            }
+
+            // 2. 간단한 단어 토큰화 및 형태소 유사도(어휘 겹침 비율) 계산 함수
+            const tokenizedSentences = sentences.map(sentence => {
+                return sentence.toLowerCase().match(/[가-힣a-z0-9]+/g) || [];
+            });
+
+            const N = sentences.length;
+            const graph = Array.from(Array(N), () => new Array(N).val = 0);
+
+            // 문장 간 유사도(Cosine Similarity 유사 방식)로 가중치 그래프 생성
+            for (let i = 0; i < N; i++) {
+                for (let j = 0; j < N; j++) {
+                    if (i === j) {
+                        graph[i][j] = 0;
+                        continue;
+                    }
+                    const setA = new Set(tokenizedSentences[i]);
+                    const setB = new Set(tokenizedSentences[j]);
+                    
+                    let intersection = 0;
+                    setA.forEach(word => {
+                        if (setB.has(word)) intersection++;
+                    });
+
+                    const logA = Math.log(setA.size || 1);
+                    const logB = Math.log(setB.size || 1);
+
+                    if (logA + logB > 0) {
+                        graph[i][j] = intersection / (logA + logB);
+                    } else {
+                        graph[i][j] = 0;
+                    }
+                }
+            }
+
+            // 3. TextRank Power Iteration (스코어 수렴 계산)
+            let scores = new Array(N).fill(1.0);
+            const d = 0.85; // 덤핑 팩터
+            const maxIterations = 50;
+
+            for (let iter = 0; iter < maxIterations; iter++) {
+                let newScores = new Array(N).fill(0);
+                for (let i = 0; i < N; i++) {
+                    let sum = 0;
+                    for (let j = 0; j < N; j++) {
+                        if (i === j) continue;
+                        let sumWeights = 0;
+                        for (let k = 0; k < N; k++) {
+                            if (k !== j) sumWeights += graph[j][k];
+                        }
+                        if (sumWeights > 0) {
+                            sum += (graph[j][i] / sumWeights) * scores[j];
+                        }
+                    }
+                    newScores[i] = (1 - d) + d * sum;
+                }
+                scores = newScores;
+            }
+
+            // 4. 점수가 높은 상위 N개의 문장 선택 (원래 문서의 순서 유지)
+            const indexedScores = scores.map((score, index) => ({ score, index }));
+            indexedScores.sort((a, b) => b.score - a.score);
+
+            const selectedIndices = indexedScores.slice(0, numSentences).map(item => item.index);
+            selectedIndices.sort((a, b) => a - b); // 원문 순서대로 정렬
+
+            return selectedIndices.map(index => sentences[index]);
+        }
+
+        function displaySummary(summaryArray) {
+            summaryList.innerHTML = '';
+            summaryArray.forEach(sentence => {
+                const li = document.createElement('li');
+                li.innerText = sentence;
+                summaryList.appendChild(li);
+            });
+            resultBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
