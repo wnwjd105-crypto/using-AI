@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Image Resizer</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- JSZip for batch downloading -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --bg-glass: rgba(255, 255, 255, 0.9);
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', 'Apple SD Gothic Neo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        header {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .logo-img:hover { transform: scale(1.05); }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* 옵션 설정 패널 */
+        .options-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            background: #f8fafc;
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .option-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .option-group select, .option-group input {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-size: 14px;
+            outline: none;
+            background: white;
+        }
+
+        .custom-ratio-box {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .custom-ratio-box input {
+            width: 100%;
+        }
+
+        /* 드래그 앤 드롭 업로드 박스 */
+        .drop-zone {
+            border: 2px dashed #a5b4fc;
+            border-radius: 16px;
+            padding: 35px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .drop-zone.dragover {
+            background: #eef2ff;
+            border-color: var(--primary);
+            transform: scale(1.01);
+        }
+        .drop-zone i {
+            font-size: 38px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .drop-zone h3 {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+        .drop-zone p {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-bottom: 15px;
+        }
+        .upload-btn {
+            padding: 8px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .upload-btn:hover { background: var(--primary-hover); }
+
+        /* 파일 목록 및 썸네일 영역 */
+        .queue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .queue-header h3 { font-size: 16px; }
+
+        .batch-download-btn {
+            padding: 8px 16px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            opacity: 0.5;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .batch-download-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .batch-download-btn.active:hover { opacity: 0.9; }
+
+        .file-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .file-item {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .file-thumb {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #e2e8f0;
+        }
+
+        .file-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background: #f1f5f9;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.15s ease;
+        }
+
+        .file-action-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: none;
+            background: #f1f5f9;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: not-allowed;
+            transition: all 0.2s;
+        }
+        .file-action-btn.active {
+            background: var(--success);
+            color: white;
+            cursor: pointer;
+        }
+        .file-action-btn.active:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="https://nanalab.kr" target="_blank">
+            <img src="logo.png" alt="NanaLab Logo" class="logo-img" onerror="this.style.display='none'">
+        </a>
+        <div class="app-title">Smart Image Resizer</div>
+    </header>
+
+    <div class="main-container">
+        <!-- 설정 패널 (비율, 모드, 여백색상) -->
+        <div class="options-panel">
+            <div class="option-group">
+                <label for="ratioSelect">캔버스 비율</label>
+                <select id="ratioSelect">
+                    <option value="1:1">1:1 (정사각형)</option>
+                    <option value="3:4">3:4 세로형</option>
+                    <option value="4:3">4:3 가로형</option>
+                    <option value="9:16">9:16 스토리/릴스</option>
+                    <option value="16:9" selected>16:9 유튜브/와이드</option>
+                    <option value="custom">커스텀 직접 입력</option>
+                </select>
+            </div>
+
+            <div class="option-group" id="customRatioGroup" style="display: none;">
+                <label>커스텀 비율 (가로:세로)</label>
+                <div class="custom-ratio-box">
+                    <input type="number" id="customW" value="4" min="1"> : 
+                    <input type="number" id="customH" value="3" min="1">
+                </div>
+            </div>
+
+            <div class="option-group">
+                <label for="modeSelect">처리 방식</label>
+                <select id="modeSelect">
+                    <option value="padding">패딩 (여백 채우기)</option>
+                    <option value="crop">크롭 (잘라내기)</option>
+                </select>
+            </div>
+
+            <div class="option-group" id="bgColorGroup">
+                <label for="bgColorPicker">여백 배경색</label>
+                <input type="color" id="bgColorPicker" value="#ffffff" style="height: 38px; width: 100%; cursor: pointer;">
+            </div>
+        </div>
+
+        <!-- 업로드 존 -->
+        <div class="drop-zone" id="dropZone">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <h3>Upload or Drop your images!</h3>
+            <p>지원 형식: JPG, PNG, WEBP (다중 선택 가능)</p>
+            <input type="file" id="fileInput" multiple accept="image/*" hidden>
+            <button class="upload-btn" id="uploadBtn">파일 선택하기</button>
+        </div>
+
+        <!-- 썸네일 및 처리 목록 -->
+        <div class="file-section" id="fileSection" style="display: none;">
+            <div class="queue-header">
+                <h3 id="queueTitle">Processing Queue (0/0)</h3>
+                <button class="batch-download-btn" id="batchDownloadBtn">일괄 다운로드 (ZIP)</button>
+            </div>
+            <ul class="file-list" id="fileList"></ul>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('fileInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileSection = document.getElementById('fileSection');
+        const fileList = document.getElementById('fileList');
+        const queueTitle = document.getElementById('queueTitle');
+        const batchDownloadBtn = document.getElementById('batchDownloadBtn');
+
+        const ratioSelect = document.getElementById('ratioSelect');
+        const customRatioGroup = document.getElementById('customRatioGroup');
+        const customW = document.getElementById('customW');
+        const customH = document.getElementById('customH');
+        const modeSelect = document.getElementById('modeSelect');
+        const bgColorGroup = document.getElementById('bgColorGroup');
+        const bgColorPicker = document.getElementById('bgColorPicker');
+
+        let processedFilesCount = 0;
+        let totalFilesCount = 0;
+        const processedResults = {}; // 일괄 다운로드용 저장소
+
+        // 비율 선택 변경 시 커스텀 입력창 토글
+        ratioSelect.addEventListener('change', () => {
+            if (ratioSelect.value === 'custom') {
+                customRatioGroup.style.display = 'flex';
+            } else {
+                customRatioGroup.style.display = 'none';
+            }
+        });
+
+        // 처리 방식 변경 시 배경색 설정창 토글 (크롭일 때는 여백색 불필요)
+        modeSelect.addEventListener('change', () => {
+            if (modeSelect.value === 'crop') {
+                bgColorGroup.style.display = 'none';
+            } else {
+                bgColorGroup.style.display = 'flex';
+            }
+        });
+
+        // 드래그 앤 드롭 이벤트 처리
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); });
+        });
+        ['dragenter', 'dragover'].forEach(() => dropZone.classList.add('dragover'));
+        ['dragleave', 'drop'].forEach(() => dropZone.classList.remove('dragover'));
+
+        dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
+        uploadBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+            this.value = '';
+        });
+
+        function handleFiles(files) {
+            const imageFiles = [...files].filter(f => f.type.startsWith('image/'));
+            if (imageFiles.length === 0) return;
+
+            fileSection.style.display = 'block';
+            totalFilesCount += imageFiles.length;
+            updateQueueTitle();
+
+            imageFiles.forEach(file => processImage(file));
+        }
+
+        function updateQueueTitle() {
+            queueTitle.textContent = `Processing Queue (${processedFilesCount}/${totalFilesCount})`;
+            if (processedFilesCount === totalFilesCount && totalFilesCount > 0) {
+                batchDownloadBtn.classList.add('active');
+            }
+        }
+
+        // 대상 비율 계산 함수
+        function getTargetAspect() {
+            const val = ratioSelect.value;
+            if (val === '1:1') return 1;
+            if (val === '3:4') return 3 / 4;
+            if (val === '4:3') return 4 / 3;
+            if (val === '9:16') return 9 / 16;
+            if (val === '16:9') return 16 / 9;
+            if (val === 'custom') {
+                const w = parseFloat(customW.value) || 1;
+                const h = parseFloat(customH.value) || 1;
+                return w / h;
+            }
+            return 16 / 9;
+        }
+
+        function processImage(file) {
+            const li = document.createElement('li');
+            li.className = 'file-item';
+
+            const objectUrl = URL.createObjectURL(file);
+            li.innerHTML = `
+                <img src="${objectUrl}" class="file-thumb" alt="thumb">
+                <div class="file-info">
+                    <span class="file-name">${file.name}</span>
+                    <div class="progress-track">
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+                <button class="file-action-btn" title="Download"><i class="fa-solid fa-download"></i></button>
+            `;
+            fileList.appendChild(li);
+
+            const progressBar = li.querySelector('.progress-bar');
+            const downloadBtn = li.querySelector('.file-action-btn');
+
+            // 프로그레스 바 애니메이션 시뮬레이션 및 실제 캔버스 연산
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 20;
+                if (progress > 90) progress = 90;
+                progressBar.style.width = progress + '%';
+            }, 60);
+
+            const img = new Image();
+            img.onload = () => {
+                clearInterval(interval);
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const targetAspect = getTargetAspect();
+                    const mode = modeSelect.value;
+
+                    let srcW = img.width;
+                    let srcH = img.height;
+                    let srcAspect = srcW / srcH;
+                    let drawW, drawH, offsetX = 0, offsetY = 0, canvasW, canvasH;
+
+                    if (mode === 'padding') {
+                        // 패딩 모드: 전체 이미지가 들어가도록 하고 여백 채우기
+                        if (srcAspect > targetAspect) {
+                            canvasW = srcW;
+                            canvasH = srcW / targetAspect;
+                            offsetX = 0;
+                            offsetY = (canvasH - srcH) / 2;
+                        } else {
+                            canvasH = srcH;
+                            canvasW = srcH * targetAspect;
+                            offsetX = (canvasW - srcW) / 2;
+                            offsetY = 0;
+                        }
+                        canvas.width = canvasW;
+                        canvas.height = canvasH;
+
+                        // 배경 여백 채우기
+                        ctx.fillStyle = bgColorPicker.value;
+                        ctx.fillRect(0, 0, canvasW, canvasH);
+                        ctx.drawImage(img, offsetX, offsetY);
+
+                    } else {
+                        // 크롭 모드: 비율에 맞춰 넘치는 부분 잘라내기
+                        if (srcAspect > targetAspect) {
+                            canvasH = srcH;
+                            canvasW = srcH * targetAspect;
+                            offsetX = (srcW - canvasW) / 2;
+                            offsetY = 0;
+                            drawW = canvasW;
+                            drawH = srcH;
+                        } else {
+                            canvasW = srcW;
+                            canvasH = srcW / targetAspect;
+                            offsetX = 0;
+                            offsetY = (srcH - canvasH) / 2;
+                            drawW = srcW;
+                            drawH = canvasH;
+                        }
+                        canvas.width = canvasW;
+                        canvas.height = canvasH;
+                        ctx.drawImage(img, offsetX, offsetY, drawW, drawH, 0, 0, canvasW, canvasH);
+                    }
+
+                    canvas.toBlob(blob => {
+                        progressBar.style.width = '100%';
+                        downloadBtn.classList.add('active');
+
+                        const newFileName = `compressed_${file.name}`;
+                        processedResults[newFileName] = blob;
+                        processedFilesCount++;
+                        updateQueueTitle();
+
+                        const blobUrl = URL.createObjectURL(blob);
+                        downloadBtn.onclick = () => {
+                            const a = document.createElement('a');
+                            a.href = blobUrl;
+                            a.download = newFileName;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                        };
+                    }, file.type || 'image/jpeg', 0.9);
+
+                } catch (err) {
+                    console.error("Image processing error:", err);
+                }
+            };
+            img.src = objectUrl;
+        }
+
+        // 일괄 다운로드 (ZIP 압축) 기능
+        batchDownloadBtn.addEventListener('click', async () => {
+            if (Object.keys(processedResults).length === 0) return;
+
+            const zip = new JSZip();
+            for (const [filename, blob] of Object.entries(processedResults)) {
+                zip.file(filename, blob);
+            }
+
+            batchDownloadBtn.textContent = 'ZIP 생성 중...';
+            const content = await zip.generateAsync({ type: 'blob' });
+            
+            const url = URL.createObjectURL(content);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'compressed_images.zip';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            batchDownloadBtn.textContent = '일괄 다운로드 (ZIP)';
+        });
+    </script>
+</body>
+</html>
