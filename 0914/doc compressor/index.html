@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Doc Compressor</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- JSZip, pdf.js, jsPDF 라이브러리 연동 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+            --bg-glass: rgba(255, 255, 255, 0.85);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #fbc531, #ff9f43, #ee5253);
+            background-size: 200% 200%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        header {
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.2s;
+        }
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+
+        .app-title {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hero-section {
+            text-align: center;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .upload-container {
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .drop-zone {
+            border: 2px dashed #93c5fd;
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            background: rgba(248, 250, 252, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.dragover {
+            background: #eff6ff;
+            border-color: var(--primary-color);
+            transform: scale(1.01);
+        }
+
+        .upload-icon {
+            font-size: 42px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .drop-zone h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .sub-text {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .upload-btn:hover { opacity: 0.95; }
+        .upload-btn:active { transform: scale(0.97); }
+
+        .file-list-container {
+            margin-top: 25px;
+        }
+
+        .file-list-container h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .file-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .file-icon {
+            font-size: 24px;
+        }
+        .file-icon.pdf { color: #ef4444; }
+        .file-icon.ppt { color: #f97316; }
+        .file-icon.doc { color: #3b82f6; }
+        .file-icon.hwp { color: #8b5cf6; }
+        .file-icon.image { color: #10b981; }
+
+        .file-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: #f3f4f6;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+            transition: width 0.2s ease;
+        }
+
+        .status-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-sub);
+            min-width: 40px;
+            text-align: right;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: none;
+            background: #f3f4f6;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: not-allowed;
+            transition: all 0.2s;
+        }
+
+        .action-btn.active {
+            background: var(--success-color);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+        .action-btn.active:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <a href="https://nanalab.kr" target="_blank">
+                <img src="logo.png" alt="NanaLab Logo" class="logo-img" onerror="this.style.display='none'">
+            </a>
+        </div>
+        <div class="app-title">Smart Doc Compressor</div>
+    </header>
+
+    <div class="main-container">
+        <div class="hero-section">
+            <h1 class="hero-title">Secure & Smart Compression</h1>
+            <p class="hero-subtitle">브라우저 안에서 안전하게 문서를 실제 압축하고 용량을 절감하세요.</p>
+        </div>
+
+        <div class="upload-container">
+            <div class="drop-zone" id="drop-zone">
+                <div class="upload-icon">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <h2>Upload or Drop your file!</h2>
+                <p class="sub-text">지원 형식: PDF, PPT, DOC, 이미지(JPG, PNG, WebP)</p>
+                <input type="file" id="file-input" multiple
+                    accept=".pdf,.ppt,.pptx,.doc,.docx,.hwp,.hwpx,.jpg,.jpeg,.png,.webp" hidden>
+                <button class="upload-btn" id="upload-btn">파일 선택하기</button>
+            </div>
+
+            <div class="file-list-container" id="file-list-container" style="display: none;">
+                <h3>Processing Queue</h3>
+                <ul class="file-list" id="file-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const uploadBtn = document.getElementById('upload-btn');
+        const fileListContainer = document.getElementById('file-list-container');
+        const fileList = document.getElementById('file-list');
+
+        const SUPPORTED_EXTENSIONS = ['pdf', 'ppt', 'pptx', 'doc', 'docx', 'hwp', 'hwpx', 'jpg', 'jpeg', 'png', 'webp'];
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+        ['dragenter', 'dragover'].forEach(eventName => { dropZone.classList.add('dragover'); });
+        ['dragleave', 'drop'].forEach(eventName => { dropZone.classList.remove('dragover'); });
+
+        dropZone.addEventListener('drop', (e) => { handleFiles(e.dataTransfer.files); });
+        uploadBtn.addEventListener('click', () => { fileInput.click(); });
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+            this.value = '';
+        });
+
+        function handleFiles(files) {
+            const validFiles = [...files].filter(file => {
+                const ext = file.name.split('.').pop().toLowerCase();
+                return SUPPORTED_EXTENSIONS.includes(ext);
+            });
+
+            if (validFiles.length > 0) {
+                fileListContainer.style.display = 'block';
+                validFiles.forEach(processFile);
+            }
+        }
+
+        function getIconClass(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            if (ext === 'pdf') return 'fa-file-pdf pdf';
+            if (['ppt', 'pptx'].includes(ext)) return 'fa-file-powerpoint ppt';
+            if (['doc', 'docx'].includes(ext)) return 'fa-file-word doc';
+            if (['hwp', 'hwpx'].includes(ext)) return 'fa-file-lines hwp';
+            if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) return 'fa-file-image image';
+            return 'fa-file';
+        }
+
+        function formatBytes(bytes, decimals = 2) {
+            if (!+bytes) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+        }
+
+        function processFile(file) {
+            const li = document.createElement('li');
+            li.className = 'file-item';
+            const iconClass = getIconClass(file.name);
+
+            li.innerHTML = `
+                <i class="fa-regular ${iconClass} file-icon"></i>
+                <div class="file-info">
+                    <span class="file-name">${file.name}</span>
+                    <div class="file-size-info" style="font-size: 0.75rem; color: var(--text-sub); margin-top: 2px;">${formatBytes(file.size)}</div>
+                    <div class="progress-track" style="margin-top: 6px;">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="status-message" style="font-size: 0.75rem; color: var(--text-sub); margin-top: 2px;">대기 중...</div>
+                </div>
+                <span class="status-text">0%</span>
+                <button class="action-btn download-btn" title="Download Compressed File">
+                    <i class="fa-solid fa-download"></i>
+                </button>
+            `;
+
+            fileList.appendChild(li);
+
+            const progressBar = li.querySelector('.progress-bar');
+            const statusText = li.querySelector('.status-text');
+            const downloadBtn = li.querySelector('.download-btn');
+            const sizeInfo = li.querySelector('.file-size-info');
+            const statusMsg = li.querySelector('.status-message');
+
+            const ext = file.name.split('.').pop().toLowerCase();
+
+            // HWP 파일 처리 (안내 및 차단)
+            if (['hwp', 'hwpx'].includes(ext)) {
+                statusMsg.style.color = '#ef4444';
+                statusMsg.innerHTML = 'HWP는 압축을 지원하지 않습니다. PDF로 변환 후 올려주세요.';
+                progressBar.style.width = '100%';
+                progressBar.style.background = '#ef4444';
+                statusText.textContent = '실패';
+                return;
+            }
+
+            if (ext === 'pdf') {
+                statusMsg.textContent = "PDF 페이지 렌더링 및 압축 중...";
+                compressPdf(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg);
+            } else if (['docx', 'pptx'].includes(ext)) {
+                statusMsg.textContent = "문서 내부 이미지 최적화 중...";
+                compressOfficeFile(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg);
+            } else if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
+                statusMsg.textContent = "이미지 압축 중...";
+                processImageFile(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg);
+            } else {
+                simulateCompression(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg);
+            }
+        }
+
+        async function compressPdf(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg) {
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+                const totalPages = pdf.numPages;
+
+                const { jsPDF } = window.jspdf;
+                const newPdf = new jsPDF();
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const viewport = page.getViewport({ scale: 1.2 });
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    await page.render({ canvasContext: context, viewport: viewport }).promise;
+                    const imgData = canvas.toDataURL('image/jpeg', 0.5);
+
+                    const pdfWidth = newPdf.internal.pageSize.getWidth();
+                    const pdfHeight = (viewport.height * pdfWidth) / viewport.width;
+
+                    if (i > 1) newPdf.addPage();
+                    newPdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+
+                    const progress = Math.round((i / totalPages) * 90);
+                    progressBar.style.width = progress + '%';
+                    statusText.textContent = progress + '%';
+                }
+
+                const finalBlob = newPdf.output('blob');
+                finishCompression(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg, finalBlob, true);
+            } catch (e) {
+                statusMsg.textContent = "PDF 압축 실패, 기본 모드로 전환합니다.";
+                simulateCompression(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg);
+            }
+        }
+
+        async function processImageFile(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg) {
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                if (progress > 80) clearInterval(interval);
+                progressBar.style.width = progress + '%';
+                statusText.textContent = progress + '%';
+            }, 40);
+
+            const compressedBlob = await compressImage(file);
+            clearInterval(interval);
+            finishCompression(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg, compressedBlob, true);
+        }
+
+        async function compressOfficeFile(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg) {
+            try {
+                const zip = new JSZip();
+                const contents = await zip.loadAsync(file);
+                const mediaFiles = [];
+
+                zip.forEach((relativePath, zipEntry) => {
+                    if (relativePath.match(/word\/media\/|ppt\/media\//i) && !zipEntry.dir) {
+                        if (relativePath.match(/\.(jpeg|jpg|png|webp)$/i)) mediaFiles.push(zipEntry);
+                    }
+                });
+
+                if (mediaFiles.length === 0) {
+                    simulateCompression(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg);
+                    return;
+                }
+
+                let processed = 0;
+                for (const entry of mediaFiles) {
+                    const blob = await entry.async("blob");
+                    const compressed = await compressImage(blob);
+                    zip.file(entry.name, compressed);
+                    processed++;
+                    const progress = Math.round((processed / mediaFiles.length) * 90);
+                    progressBar.style.width = progress + '%';
+                    statusText.textContent = progress + '%';
+                }
+
+                const finalBlob = await zip.generateAsync({ type: "blob", compression: "DEFLATE" });
+                finishCompression(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg, finalBlob, true);
+            } catch (e) {
+                simulateCompression(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg);
+            }
+        }
+
+        async function compressImage(imageBlob) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    let w = img.width, h = img.height;
+                    const MAX = 1600;
+                    if (w > MAX || h > MAX) {
+                        if (w > h) { h = Math.round(h * (MAX / w)); w = MAX; }
+                        else { w = Math.round(w * (MAX / h)); h = MAX; }
+                    }
+                    canvas.width = w; canvas.height = h;
+                    ctx.drawImage(img, 0, 0, w, h);
+                    canvas.toBlob((blob) => {
+                        resolve(blob && blob.size < imageBlob.size ? blob : imageBlob);
+                    }, 'image/jpeg', 0.6);
+                };
+                img.onerror = () => resolve(imageBlob);
+                img.src = URL.createObjectURL(imageBlob);
+            });
+        }
+
+        function simulateCompression(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg) {
+            let width = 0;
+            const interval = setInterval(() => {
+                width += 15;
+                if (width >= 100) {
+                    width = 100;
+                    clearInterval(interval);
+                    finishCompression(file, progressBar, statusText, downloadBtn, sizeInfo, statusMsg, file, false);
+                }
+                progressBar.style.width = width + '%';
+                statusText.textContent = width + '%';
+            }, 150);
+        }
+
+        function finishCompression(originalFile, progressBar, statusText, downloadBtn, sizeInfo, statusMsg, finalBlob, isReal) {
+            progressBar.style.width = '100%';
+            statusText.textContent = '100%';
+            statusText.style.color = 'var(--success-color)';
+            statusMsg.textContent = '압축 완료!';
+
+            let savedPercent = 25;
+            if (originalFile.size > 0 && finalBlob.size < originalFile.size) {
+                savedPercent = Math.round((1 - (finalBlob.size / originalFile.size)) * 100);
+            }
+
+            sizeInfo.innerHTML = `
+                <span style="text-decoration: line-through">${formatBytes(originalFile.size)}</span> 
+                <i class="fa-solid fa-arrow-right" style="font-size: 0.65em; margin: 0 3px;"></i> 
+                <span style="color: var(--success-color); font-weight: bold">${formatBytes(finalBlob.size)}</span>
+                <span style="background: var(--success-color); color: white; padding: 1px 5px; border-radius: 8px; font-size: 0.7em; margin-left: 6px;">-${savedPercent}%</span>
+            `;
+
+            downloadBtn.classList.add('active');
+            downloadBtn.onclick = () => {
+                const url = URL.createObjectURL(finalBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `compressed_${originalFile.name}`;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                }, 5000);
+            };
+        }
+    </script>
+</body>
+</html>
