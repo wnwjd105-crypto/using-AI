@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주정훈 | 이력서 (Resume)</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Noto+Sans+KR:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- 외부 CSS 분리 연결 -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="wrapper">
+    <!-- Header & Navigation -->
+    <header>
+      <h1>주정훈 이력서</h1>
+      <p class="subtitle">전자공학 엔지니어 & 소프트웨어 개발자</p>
+      <nav>
+        <ul>
+          <li><a href="#my-info">My Info</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#timeline">Education</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <!-- 1. My Info Section -->
+      <section id="my-info">
+        <h2>1. My Info</h2>
+        <div class="profile-container">
+          <div class="profile-image-box">
+            <!-- images/profile.jpg 파일이 있을 경우 표출되며, 없을 경우 대체 텍스트가 표출됩니다. -->
+            <img src="images/profile.jpg" alt="주정훈 프로필 사진" class="profile-img">
+          </div>
+          <div class="info-table-box">
+            <table>
+              <caption>기본 인적사항</caption>
+              <tbody>
+                <tr>
+                  <th scope="row">이름</th>
+                  <td>주정훈 (JOO JEONGHOON)</td>
+                </tr>
+                <tr>
+                  <th scope="row">전공/소속</th>
+                  <td>경성대학교 전자공학과</td>
+                </tr>
+                <tr>
+                  <th scope="row">희망 직무</th>
+                  <td>엔지니어 / 임베디드 SW 개발자 / 연구원</td>
+                </tr>
+                <tr>
+                  <th scope="row">현재 상태</th>
+                  <td>2027년 졸업예정 / K-Move 해외취업연수 이수 중</td>
+                </tr>
+                <tr>
+                  <th scope="row">거주지</th>
+                  <td>대한민국 부산광역시</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. About Section -->
+      <section id="about">
+        <h2>2. About Me</h2>
+        <p>
+          경성대학교 전자공학과에서 회로 설계, 전자기학, 통신 하위 계층을 전공하고 있으며, 임베디드 C/Python 코드 연산 분석 및 웹/DB(MySQL, R) 연동 경험을 보유하고 있습니다. 프로젝트 진행 시 명확한 명세 이해와 강한 실행력을 바탕으로 팀의 목표를 완수합니다. 현재는 K-Move 해외취업연수를 통해 글로벌 역량과 일본어 실력을 키우며, 하드웨어 제어와 소프트웨어 시스템을 결합할 수 있는 전천후 엔지니어로 성장하고 있습니다.
+        </p>
+      </section>
+
+      <!-- 3. Contact Section -->
+      <section id="contact">
+        <h2>3. Contact & Links</h2>
+        <ul class="contact-list">
+          <li><strong>Email:</strong> <a href="mailto:wnwjd105@naver.com">wnwjd105@naver.com</a></li>
+          <li><strong>GitHub:</strong> <a href="https://github.com/wnwjd105-crypto" target="_blank" rel="noopener noreferrer">https://github.com/wnwjd105-crypto</a></li>
+          <li><strong>연락 가능 상태:</strong> K-Move 해외취업 연수 및 졸업예정 구직 준비 중</li>
+        </ul>
+      </section>
+
+      <!-- 4. Skills Section -->
+      <section id="skills">
+        <h2>4. Skills & Capabilities</h2>
+        <div class="skills-wrapper">
+          <div class="skill-category">
+            <h3>Hardware & Circuit Design</h3>
+            <ul>
+              <li>회로 이론 및 전자기학 지식</li>
+              <li>통신 하위계층 이해 및 회로 설계/조립 경험</li>
+              <li>반도체 기본 상식 및 계측기 활용 능력</li>
+            </ul>
+          </div>
+          <div class="skill-category">
+            <h3>Software & Database</h3>
+            <ol>
+              <li><strong>C / Python:</strong> 코드 실행 결과 추론, 로직 디버깅 및 MCU 제어</li>
+              <li><strong>Web Dev:</strong> HTML, CSS, JavaScript 및 Apache 기반 온라인 웹 서버 구축</li>
+              <li><strong>Database & Analysis:</strong> MySQL 및 R 언어를 활용한 데이터베이스 관리</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Projects Section -->
+      <section id="projects">
+        <h2>5. Key Projects</h2>
+        <div class="project-cards">
+          <article class="project-card">
+            <h3>POV 디스플레이 (Persistence of Vision Display)</h3>
+            <p class="project-summary">
+              회전하는 프로펠러 위 LED 스트립의 잔상 효과를 이용해 정밀 이미지를 표출하는 하드웨어 프로젝트입니다.
+            </p>
+            <ul>
+              <li>영구 자석과 홀 센서를 활용하여 프로펠러 회전수(RPM) 실시간 측정</li>
+              <li>회전 주기에 맞춰 MCU 칩으로 microsecond 단위 LED 점등 제어</li>
+              <li>전체 하드웨어 회로 조립 및 구동 정밀도 디버깅 담당</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- 6. Timeline Section -->
+      <section id="timeline">
+        <h2>6. Education & History</h2>
+        <ul class="timeline-list">
+          <li><strong>2027년 (예정):</strong> 경성대학교 전자공학과 졸업예정</li>
+          <li><strong>2026년 ~ 현재:</strong> K-Move 해외취업연수 이수 중 (일본어 공부)</li>
+          <li><strong>2023년:</strong> 경성대학교 복학</li>
+          <li><strong>2021년:</strong> 경성대학교 입학 및 군 휴학</li>
+          <li><strong>2018년 ~ 2021년:</strong> 동래고등학교 졸업</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 JOO JEONGHOON. Basic Resume Page.</p>
+    </footer>
+  </div>
+
+</body>
+</html>
