@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주정훈 (JOO JEONGHOON) | Full-Stack Embedded & System Engineer</title>
+  <meta name="description" content="회로 설계와 저계층 펌웨어부터 웹 서버 및 데이터베이스까지 아우르는 융합형 임베디드 시스템 엔지니어 주정훈의 포트폴리오. K-Move 글로벌 해외취업연수 (일본 타깃).">
+  <meta name="keywords" content="주정훈, 임베디드 엔지니어, 경성대학교 전자공학과, STM32, Embedded C, Python, MySQL, Apache, POV 디스플레이, K-Move 일본취업">
+  <meta name="author" content="Joo Jeonghoon">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="주정훈 | Full-Stack Embedded & System Engineer">
+  <meta property="og:description" content="하드웨어-통신-소프트웨어 전 계층을 이해하는 융합형 엔지니어 포트폴리오 v2">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/img/profile.jpg">
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- ========================================================================
+       Fixed Header & Navigation
+       ======================================================================== -->
+  <header class="site-header" role="banner">
+    <a href="#home" class="brand-logo" data-slide="0" aria-label="Home">
+      <span class="logo-tag">&lt;JOO /&gt;</span>
+      <span class="status-dot" title="System Online"></span>
+      <span class="brand-subtitle">Full-Stack Systems Engineer</span>
+    </a>
+
+    <nav class="main-nav" role="navigation" aria-label="Main Navigation">
+      <a href="#home" class="nav-link active" data-slide="0"><span class="nav-num">01.</span> Home</a>
+      <a href="#about" class="nav-link" data-slide="1"><span class="nav-num">02.</span> About</a>
+      <a href="#skills" class="nav-link" data-slide="2"><span class="nav-num">03.</span> Skills</a>
+      <a href="#projects" class="nav-link" data-slide="3"><span class="nav-num">04.</span> Projects</a>
+      <a href="#timeline" class="nav-link" data-slide="4"><span class="nav-num">05.</span> Timeline</a>
+      <a href="#contact" class="nav-link" data-slide="5"><span class="nav-num">06.</span> Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <span class="header-badge">
+        <i class="flag-icon">🇯🇵</i> K-Move Global (Japan Target)
+      </span>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       Horizontal Slide Track Viewport
+       ======================================================================== -->
+  <main class="viewport-wrapper" id="app">
+    <div class="track" id="mainTrack">
+
+      <!-- ====================================================================
+           SLIDE 1: HOME (Hero & macOS Terminal UI)
+           ==================================================================== -->
+      <section class="slide-section is-active" id="home" data-index="0" aria-label="Home Section">
+        <div class="section-container">
+          <div class="hero-layout">
+            
+            <!-- Hero Left Content -->
+            <div class="hero-content reveal-item delay-1">
+              <div class="hero-meta-badge">
+                <span>⚡ KYUNGSUNG UNIV. EE '27</span>
+                <span>•</span>
+                <span>GLOBAL EMBEDDED PIPELINE</span>
+              </div>
+
+              <h1 class="hero-title">
+                Hardware to Web,<br>
+                <span class="gradient-text">Full-Stack Systems</span><br>
+                Engineer 주정훈
+              </h1>
+
+              <p class="hero-statement">
+                전자기학과 회로 설계의 단단한 기반 위에, <strong>C/Python 저계층 펌웨어 제어</strong>와 
+                <strong>MySQL/Apache 기반 웹 인프라</strong>를 결합하여 실세계의 신호를 디지털 가치로 전환합니다.
+              </p>
+
+              <div class="hero-badges-wrap">
+                <span class="hero-badge-pill highlight">🎯 K-Move Global Engineer (Japan Target)</span>
+                <span class="hero-badge-pill">⚙️ STM32 & Bare-Metal ISR</span>
+                <span class="hero-badge-pill">📡 UART / CAN / MQTT</span>
+                <span class="hero-badge-pill">🗄️ Apache & MySQL Stack</span>
+              </div>
+
+              <div class="hero-cta-group">
+                <a href="#projects" class="btn-primary" data-jump="3">
+                  <span>Explore Engineering Specs</span>
+                  <span>→</span>
+                </a>
+                <a href="#contact" class="btn-secondary" data-jump="5">
+                  <span>Get in Touch</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Hero Right: macOS Terminal UI -->
+            <div class="terminal-wrapper reveal-item delay-2">
+              <div class="terminal-card" role="region" aria-label="Interactive Terminal">
+                <div class="terminal-header">
+                  <div class="traffic-lights">
+                    <span class="t-btn t-close"></span>
+                    <span class="t-btn t-minimize"></span>
+                    <span class="t-btn t-expand"></span>
+                  </div>
+                  <span class="terminal-title">bash ~ joo@embedded-station: ~/portfolio_v2</span>
+                  <span class="terminal-env">ARM-Cortex-M4</span>
+                </div>
+
+                <div class="terminal-body">
+                  <div class="t-line">
+                    <span class="t-prompt">joo@hw-station:~$</span>
+                    <span class="t-command">./init_fullstack_core.sh --verbose</span>
+                  </div>
+
+                  <div class="t-output">
+                    [HW_INIT] GPIO, Clock & Timer Interrupts initialized (168MHz).<br>
+                    [COMM_OK] UART / SPI / I2C Bus ready. CRC-16 check passed.<br>
+                    [SRV_ACK] Apache Daemon running. MySQL Schema bound: `iot_telemetry`.<br>
+                    [GLOBAL] K-Move Japan Embedded Track configured.
+                  </div>
+
+                  <div class="t-line">
+                    <span class="t-prompt">joo@hw-station:~$</span>
+                    <span class="t-command">echo $MISSION_STATEMENT</span>
+                  </div>
+
+                  <div class="t-line">
+                    <span id="terminalTyping"></span><span class="cursor-blink" aria-hidden="true"></span>
+                  </div>
+
+                  <div class="t-sysinfo">
+                    <div class="sys-item">
+                      <span>TARGET_CAREER:</span> <strong>Global Embedded (Japan)</strong>
+                    </div>
+                    <div class="sys-item">
+                      <span>TECH_HORIZON:</span> <strong>Silicon to Cloud Web</strong>
+                    </div>
+                    <div class="sys-item">
+                      <span>POV_RPM_ERROR:</span> <strong>&lt; ±1.0% (Interrupt-Driven)</strong>
+                    </div>
+                    <div class="sys-item">
+                      <span>GRADUATION:</span> <strong>2027 (Kyungsung Univ.)</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SLIDE 2: ABOUT (Convergence Identity & Engineering Persona)
+           ==================================================================== -->
+      <section class="slide-section" id="about" data-index="1" aria-label="About Section">
+        <div class="section-container">
+          <div class="section-tag">Identity & Engineering Philosophy</div>
+          <h2 class="section-title">회로부터 웹 서버까지, 전 계층을 관통하는 통찰</h2>
+          <p class="section-subtitle">
+            단순히 코드를 작성하는 프로그래머를 넘어, 전자기학적 물리 계층부터 사용자 브라우저까지의 
+            모든 인터페이스를 이해하고 직접 제어하는 융합형 엔지니어 주정훈입니다.
+          </p>
+
+          <div class="about-grid">
+            
+            <!-- Profile Identity Card -->
+            <div class="about-profile-card reveal-item delay-1">
+              <div class="profile-img-container">
+                <img src="assets/img/profile.jpg" alt="주정훈 엔지니어 프로필" class="profile-img" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80'">
+                <div class="profile-badge-float">Active Engineer</div>
+              </div>
+
+              <h3 class="profile-name">주정훈</h3>
+              <p class="profile-eng-name">JOO JEONGHOON</p>
+              <p class="profile-school">경성대학교 전자공학과 (2027년 졸업 예정)</p>
+
+              <div class="profile-quick-stats">
+                <div class="p-stat">
+                  <span>Architecture</span>
+                  <strong>Full-Stack Embedded</strong>
+                </div>
+                <div class="p-stat">
+                  <span>HW Prototype</span>
+                  <strong>PCB Layout & Soldering</strong>
+                </div>
+                <div class="p-stat">
+                  <span>Target Region</span>
+                  <strong>Japan (K-Move)</strong>
+                </div>
+                <div class="p-stat">
+                  <span>Languages</span>
+                  <strong>Korean / Japanese</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Convergence Narrative & Feature Grid -->
+            <div class="about-content-body reveal-item delay-2">
+              <div class="narrative-lead">
+                "하드웨어 결함인지, 통신 패킷 유실인지, 소프트웨어 버그인지 모호한 임베디드 현장에서 
+                오실로스코프 신호 파형부터 데이터베이스 쿼리까지 원스톱으로 트러블슈팅할 수 있는 융합 능력이 저의 가장 큰 무기입니다."
+              </div>
+
+              <div class="about-features-grid">
+                <div class="feature-box">
+                  <span class="feature-icon">🔌</span>
+                  <h4 class="feature-title">회로 설계 & 전자기학 기본기</h4>
+                  <p class="feature-desc">
+                    전자기학 및 회로이론에 근거하여 기생 커패시턴스와 노이즈를 억제하는 PCB 레이아웃을 직접 설계하고 기계적 조립까지 완수합니다.
+                  </p>
+                </div>
+
+                <div class="feature-box">
+                  <span class="feature-icon">⏱️</span>
+                  <h4 class="feature-title">Microsecond 단위 펌웨어 제어</h4>
+                  <p class="feature-desc">
+                    홀센서 외부 인터럽트 및 하드웨어 타이머를 정밀하게 구성하여 오차 ±1% 이내의 실시간 속도 동기화와 고속 제어를 실현합니다.
+                  </p>
+                </div>
+
+                <div class="feature-box">
+                  <span class="feature-icon">📡</span>
+                  <h4 class="feature-title">신뢰성 기반 통신 프로토콜</h4>
+                  <p class="feature-desc">
+                    UART, SPI, I2C, CAN Bus 등 하위 버스 통신에서 CRC 무결성 검증을 적용하여 패킷 손실 없는 안정적 데이터 교환을 구현합니다.
+                  </p>
+                </div>
+
+                <div class="feature-box">
+                  <span class="feature-icon">🌐</span>
+                  <h4 class="feature-title">Apache & MySQL 통합 인프라</h4>
+                  <p class="feature-desc">
+                    MCU에서 수집된 대량 센서 데이터를 MySQL 데이터베이스로 수집 및 인덱싱하고, Apache 웹 서버를 통해 반응형 모니터링 UI를 제공합니다.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SLIDE 3: SKILLS (4-Tier Architecture & Specs)
+           ==================================================================== -->
+      <section class="slide-section" id="skills" data-index="2" aria-label="Skills Section">
+        <div class="section-container">
+          <div class="section-tag">Technical Hierarchy</div>
+          <h2 class="section-title">4단계 세분화 기술 스택 & 정량적 역량</h2>
+          <p class="section-subtitle">
+            단순 기술 나열이 아닌, 실물 하드웨어 레벨부터 웹 데이터베이스 파이프라인까지 
+            체계화된 4개 영역의 엔지니어링 스펙트럼입니다.
+          </p>
+
+          <div class="skills-grid">
+            
+            <!-- Tier 1: Hardware & Circuit -->
+            <div class="skill-category-card reveal-item delay-1" style="--card-accent: #00f2fe;">
+              <div class="category-header">
+                <h3 class="category-title">
+                  <span class="cat-icon">⚡</span> Hardware & Circuit
+                </h3>
+                <span class="category-tier-badge">LAYER 01 : PHYSICAL</span>
+              </div>
+
+              <div class="skill-list">
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">Circuit Design & Schematic Analysis</span>
+                    <span class="skill-pct">92%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="92%"></div>
+                  </div>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">KiCad / OrCAD PCB Layout (Double-Layer)</span>
+                    <span class="skill-pct">88%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="88%"></div>
+                  </div>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">Oscilloscope & Logic Analyzer Debugging</span>
+                    <span class="skill-pct">90%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="90%"></div>
+                  </div>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">Power Regulation & Noise Decoupling</span>
+                    <span class="skill-pct">85%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="85%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="skill-tags-group">
+                <span class="skill-tag active-tech">KiCad</span>
+                <span class="skill-tag active-tech">OrCAD</span>
+                <span class="skill-tag">SMD Soldering</span>
+                <span class="skill-tag">Hall Sensor</span>
+                <span class="skill-tag">Signal Integrity</span>
+                <span class="skill-tag">Circuit Layout</span>
+              </div>
+            </div>
+
+            <!-- Tier 2: Low-Level & Embedded -->
+            <div class="skill-category-card reveal-item delay-2" style="--card-accent: #00f5a0;">
+              <div class="category-header">
+                <h3 class="category-title">
+                  <span class="cat-icon">⚙️</span> Low-Level & Embedded (C/Python)
+                </h3>
+                <span class="category-tier-badge">LAYER 02 : FIRMWARE</span>
+              </div>
+
+              <div class="skill-list">
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">Embedded C / C++ (C99 / C11 Standard)</span>
+                    <span class="skill-pct">95%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="95%"></div>
+                  </div>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">STM32 (Cortex-M) & AVR Microcontrollers</span>
+                    <span class="skill-pct">92%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="92%"></div>
+                  </div>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">Hardware Timer ISR & Microsecond Control</span>
+                    <span class="skill-pct">94%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="94%"></div>
+                  </div>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">Python Hardware Automation & PySerial</span>
+                    <span class="skill-pct">88%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="88%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="skill-tags-group">
+                <span class="skill-tag active-tech">Embedded C</span>
+                <span class="skill-tag active-tech">STM32CubeIDE</span>
+                <span class="skill-tag">AVR ATmega</span>
+                <span class="skill-tag">Bare-Metal</span>
+                <span class="skill-tag">Python 3</span>
+                <span class="skill-tag">FreeRTOS Basic</span>
+              </div>
+            </div>
+
+            <!-- Tier 3: Network & Communication -->
+            <div class="skill-category-card reveal-item delay-3" style="--card-accent: #38bdf8;">
+              <div class="category-header">
+                <h3 class="category-title">
+                  <span class="cat-icon">📡</span> Network & Communication
+                </h3>
+                <span class="category-tier-badge">LAYER 03 : PROTOCOL</span>
+              </div>
+
+              <div class="skill-list">
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">UART, SPI, I2C Bus Architectures</span>
+                    <span class="skill-pct">95%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="95%"></div>
+                  </div>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">CAN Bus & Industrial Automotive Basics</span>
+                    <span class="skill-pct">82%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="82%"></div>
+                  </div>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">TCP/IP, HTTP REST & MQTT IoT Protocols</span>
+                    <span class="skill-pct">88%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="88%"></div>
+                  </div>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">Packet Framing & CRC-16 Error Checking</span>
+                    <span class="skill-pct">90%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="90%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="skill-tags-group">
+                <span class="skill-tag active-tech">UART</span>
+                <span class="skill-tag active-tech">SPI / I2C</span>
+                <span class="skill-tag">CAN Bus</span>
+                <span class="skill-tag">MQTT</span>
+                <span class="skill-tag">Modbus RS-485</span>
+                <span class="skill-tag">TCP/IP Socket</span>
+              </div>
+            </div>
+
+            <!-- Tier 4: Web & Database -->
+            <div class="skill-category-card reveal-item delay-4" style="--card-accent: #f59e0b;">
+              <div class="category-header">
+                <h3 class="category-title">
+                  <span class="cat-icon">🗄️</span> Web & Database (MySQL / Apache)
+                </h3>
+                <span class="category-tier-badge">LAYER 04 : APPLICATION</span>
+              </div>
+
+              <div class="skill-list">
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">MySQL / MariaDB Schema Design & Indexing</span>
+                    <span class="skill-pct">86%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="86%"></div>
+                  </div>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">Apache HTTP Server Config & Virtual Hosts</span>
+                    <span class="skill-pct">84%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="84%"></div>
+                  </div>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">Vanilla HTML5, Modern CSS3 & Modern JavaScript</span>
+                    <span class="skill-pct">90%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="90%"></div>
+                  </div>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-info">
+                    <span class="skill-name">Real-Time Telemetry Dashboards & REST API</span>
+                    <span class="skill-pct">85%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" data-pct="85%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="skill-tags-group">
+                <span class="skill-tag active-tech">MySQL</span>
+                <span class="skill-tag active-tech">Apache</span>
+                <span class="skill-tag">Vanilla JS</span>
+                <span class="skill-tag">HTML5 / CSS3</span>
+                <span class="skill-tag">RESTful API</span>
+                <span class="skill-tag">Linux Server</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SLIDE 4: PROJECTS (Quantitative Engineering Specs)
+           ==================================================================== -->
+      <section class="slide-section" id="projects" data-index="3" aria-label="Projects Section">
+        <div class="section-container">
+          <div class="section-tag">Engineering Showcase</div>
+          <h2 class="section-title">정량적 수치와 스펙으로 입증하는 프로젝트</h2>
+          <p class="section-subtitle">
+            모호한 설명 대신 명확한 하드웨어 오차율, 프레임 레이트, 타이머 정밀도 등 
+            측정 가능한 엔지니어링 지표를 기반으로 프로젝트 성과를 증명합니다.
+          </p>
+
+          <div class="projects-grid">
+            
+            <!-- Project 1: POV Display -->
+            <article class="project-card reveal-item delay-1">
+              <div class="project-media-wrap">
+                <img src="assets/img/pov-project.jpg" alt="High-Speed POV Display System" onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop&q=80'">
+                <div class="project-badge-overlay">FLAGSHIP HARDWARE</div>
+              </div>
+
+              <div class="project-content">
+                <h3 class="project-title">High-Speed POV (Persistence of Vision) Display</h3>
+                <p class="project-role-tag">단독 하드웨어 설계 &amp; 펌웨어 최적화 리드</p>
+
+                <!-- Mandatory Quantitative Metrics Box -->
+                <div class="metrics-box">
+                  <div class="metrics-box-title">⚡ Verified Engineering Metrics (정량적 성과)</div>
+                  <ul class="metrics-list">
+                    <li>
+                      <span><strong>홀센서 인터럽트 제어로 RPM 측정 오차 ±1% 이내 달성:</strong> 모터 회전 속도 변화에 실시간으로 적응하여 1480~1800 RPM 구간에서 그래픽 왜곡 없는 동기화 구현.</span>
+                    </li>
+                    <li>
+                      <span><strong>microsecond 단위 타이밍 제어로 60 FPS 수준 정밀 잔상 구현:</strong> 10µs 단위의 하드웨어 타이머 인터럽트를 통해 잔상 번짐(Jitter)을 제거하고 선명한 공중 홀로그램 디스플레이 완성.</span>
+                    </li>
+                    <li>
+                      <span><strong>기계 조립 및 회로 레이아웃 직접 설계:</strong> 회전 시 원심력과 진동을 견딜 수 있도록 무게 중심을 고려한 양면 PCB 레이아웃 및 견고한 아크릴 프레임 직접 제작.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="specs-grid">
+                  <div class="spec-chip">
+                    <span>RPM Precision</span>
+                    <strong>±1.0% Error</strong>
+                  </div>
+                  <div class="spec-chip">
+                    <span>Visual Refresh</span>
+                    <strong>60 FPS Eqv.</strong>
+                  </div>
+                  <div class="spec-chip">
+                    <span>Interrupt Clock</span>
+                    <strong>10 µs ISR</strong>
+                  </div>
+                </div>
+
+                <div class="project-tech-tags">
+                  <span class="p-tech">STM32F4</span>
+                  <span class="p-tech">Embedded C</span>
+                  <span class="p-tech">Hall Sensor</span>
+                  <span class="p-tech">Hardware Timer</span>
+                  <span class="p-tech">KiCad PCB</span>
+                  <span class="p-tech">Soldering</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Project 2: IoT Telemetry & Web Platform -->
+            <article class="project-card reveal-item delay-2">
+              <div class="project-media-wrap">
+                <img src="assets/img/iot-project.jpg" alt="IoT Telemetry & Web Dashboard System" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80'">
+                <div class="project-badge-overlay">FULL-STACK SYSTEM</div>
+              </div>
+
+              <div class="project-content">
+                <h3 class="project-title">Industrial IoT Telemetry & Full-Stack Web Platform</h3>
+                <p class="project-role-tag">임베디드 노드 - MySQL DB - Apache 웹 서버 전 계층 개발</p>
+
+                <!-- Quantitative Metrics Box -->
+                <div class="metrics-box">
+                  <div class="metrics-box-title">⚡ Verified Engineering Metrics (정량적 성과)</div>
+                  <ul class="metrics-list">
+                    <li>
+                      <span><strong>센서 수집 MCU와 Apache/MySQL 간 무손실 전송:</strong> CRC 패킷 검증 및 버퍼 큐 설계를 통해 115200 bps 고속 전송 중 패킷 손실률 0.00% 달성.</span>
+                    </li>
+                    <li>
+                      <span><strong>다채널 센서 100Hz 샘플링 & 50ms 미만 초저지연 쿼리:</strong> 진동/온습도 데이터 실시간 저장 및 MySQL B-Tree 복합 인덱스 최적화로 대시보드 렌더링 지연 최소화.</span>
+                    </li>
+                    <li>
+                      <span><strong>반응형 모니터링 웹 인터페이스 구축:</strong> 이상 징후 발생 시 임베디드 릴레이 제어 신호를 역방향으로 전송하여 즉각적인 위험 차단 루프 완성.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="specs-grid">
+                  <div class="spec-chip">
+                    <span>Packet Loss</span>
+                    <strong>0.00% Verified</strong>
+                  </div>
+                  <div class="spec-chip">
+                    <span>Query Latency</span>
+                    <strong>&lt; 50 ms</strong>
+                  </div>
+                  <div class="spec-chip">
+                    <span>Sample Freq</span>
+                    <strong>100 Hz / Ch</strong>
+                  </div>
+                </div>
+
+                <div class="project-tech-tags">
+                  <span class="p-tech">ESP32 / STM32</span>
+                  <span class="p-tech">Embedded C</span>
+                  <span class="p-tech">Python</span>
+                  <span class="p-tech">MySQL</span>
+                  <span class="p-tech">Apache</span>
+                  <span class="p-tech">JavaScript</span>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SLIDE 5: TIMELINE (Academic & Global Career Roadmap)
+           ==================================================================== -->
+      <section class="slide-section" id="timeline" data-index="4" aria-label="Timeline Section">
+        <div class="section-container">
+          <div class="section-tag">Career Milestones</div>
+          <h2 class="section-title">학업 기초에서 글로벌 엔지니어로의 진화</h2>
+          <p class="section-subtitle">
+            경성대학교 전자공학과의 체계적인 전공 지식을 발판으로, 
+            K-Move 글로벌 연수 과정을 거쳐 일본 하드웨어/임베디드 시장 진출을 준비하는 로드맵입니다.
+          </p>
+
+          <div class="timeline-container">
+            
+            <!-- Milestone 1 -->
+            <div class="timeline-item reveal-item delay-1">
+              <div class="timeline-node"></div>
+              <div class="timeline-card">
+                <div class="timeline-date-row">
+                  <span class="t-date">2021.03 ~ PRESENT</span>
+                  <span class="t-tag">ACADEMIC EXCELLENCE</span>
+                </div>
+                <h3 class="t-headline">경성대학교 전자공학과 입학 및 전공 심화 (2027년 졸업 예정)</h3>
+                <p class="t-desc">
+                  전자기학, 회로이론, 전자회로, 신호및시스템, 마이크로프로세서응용 등 
+                  전자공학 핵심 이론을 충실히 이수하여 하드웨어 물리 현상에 대한 단단한 공학적 직관을 확립.
+                </p>
+              </div>
+            </div>
+
+            <!-- Milestone 2 -->
+            <div class="timeline-item reveal-item delay-2">
+              <div class="timeline-node"></div>
+              <div class="timeline-card">
+                <div class="timeline-date-row">
+                  <span class="t-date">2023.04 ~ 2023.11</span>
+                  <span class="t-tag">HARDWARE PROTOTYPING</span>
+                </div>
+                <h3 class="t-headline">초고속 잔상 POV 디스플레이 시스템 독자 개발</h3>
+                <p class="t-desc">
+                  홀센서 인터럽트 기반 오차 ±1% 이내의 RPM 추종 펌웨어와 10µs 타이머 제어를 구현. 
+                  원심력을 고려한 양면 PCB 레이아웃 및 아크릴 기구부를 직접 제작하며 하드웨어-소프트웨어 융합 역량 입증.
+                </p>
+              </div>
+            </div>
+
+            <!-- Milestone 3 -->
+            <div class="timeline-item reveal-item delay-3 active-target">
+              <div class="timeline-node"></div>
+              <div class="timeline-card">
+                <div class="timeline-date-row">
+                  <span class="t-date">2024 ~ 2025</span>
+                  <span class="t-tag japan-target">🇯🇵 K-MOVE GLOBAL PROGRAM</span>
+                </div>
+                <h3 class="t-headline">K-Move 해외취업연수 프로그램 선발 (일본 임베디드 SW 과정)</h3>
+                <p class="t-desc">
+                  일본 하드웨어 및 임베디드 시장 진출을 목표로 실무 일본어(IT/비즈니스 회화)와 
+                  차세대 임베디드 시스템 아키텍처 연수를 집중 수행하며 현지 채용 프로세스 준비.
+                </p>
+              </div>
+            </div>
+
+            <!-- Milestone 4 -->
+            <div class="timeline-item reveal-item delay-4">
+              <div class="timeline-node"></div>
+              <div class="timeline-card">
+                <div class="timeline-date-row">
+                  <span class="t-date">2025 ~ 2026</span>
+                  <span class="t-tag">FULL-STACK EXPANSION</span>
+                </div>
+                <h3 class="t-headline">산업용 IoT 텔레메트리 &amp; Apache/MySQL 웹 플랫폼 구축</h3>
+                <p class="t-desc">
+                  단말 MCU에서 수집된 데이터를 안전하게 전송받아 MySQL 데이터베이스로 파이프라인화하고 
+                  Apache 웹 서버를 통해 반응형 모니터링을 제공하는 풀스택 시스템 인프라 구축.
+                </p>
+              </div>
+            </div>
+
+            <!-- Milestone 5 -->
+            <div class="timeline-item reveal-item delay-4 active-target">
+              <div class="timeline-node"></div>
+              <div class="timeline-card">
+                <div class="timeline-date-row">
+                  <span class="t-date">2026 ~ 2027 TARGET</span>
+                  <span class="t-tag japan-target">GLOBAL CAREER LAUNCH</span>
+                </div>
+                <h3 class="t-headline">일본 현지 임베디드 시스템 엔지니어 진출 &amp; 학부 졸업</h3>
+                <p class="t-desc">
+                  하드웨어와 소프트웨어를 가리지 않고 전 계층을 원활히 통합하는 신뢰성 높은 융합형 엔지니어로서 
+                  글로벌 모빌리티 / 스마트 팩토리 / 정밀 제어 산업 현장에서 활약 예정.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SLIDE 6: CONTACT (Global Target Badge & Direct Inquiries)
+           ==================================================================== -->
+      <section class="slide-section" id="contact" data-index="5" aria-label="Contact Section">
+        <div class="section-container">
+          <div class="section-tag">Global Connection</div>
+          <h2 class="section-title">함께 미래 기술을 구현할 글로벌 파트너십</h2>
+          <p class="section-subtitle">
+            K-Move 연수 과정을 통해 일본을 비롯한 글로벌 하드웨어/소프트웨어 엔지니어링 포지션을 준비하고 있습니다. 
+            기술 토론 및 협업 제안은 언제든 환영합니다.
+          </p>
+
+          <div class="contact-layout">
+            
+            <!-- Left Card: K-Move Badge & Readiness -->
+            <div class="kmove-feature-card reveal-item delay-1">
+              <div class="kmove-badge-large">
+                <span>🇯🇵</span> K-Move Global Engineer Training Program (Japan Target)
+              </div>
+
+              <h3 class="kmove-title">글로벌 무대에서 즉시 활약 가능한 엔지니어링 인재</h3>
+              <p class="kmove-desc">
+                단단한 전자공학적 전공 기초와 실무 프로젝트 경험을 보유하고 있으며, 
+                일본 현지 비즈니스 문화와 IT 기술 일본어 트레이닝을 마친 준비된 엔지니어입니다.
+              </p>
+
+              <div class="language-readiness-grid">
+                <div class="lang-box">
+                  <div class="lang-header">
+                    <span>🇰🇷</span> <span>한국어 (Korean)</span>
+                  </div>
+                  <div class="lang-level">Native (모국어)</div>
+                  <div class="lang-detail">전문 회로 기술 문서 작성 및 복잡한 엔지니어링 논의 능숙</div>
+                </div>
+
+                <div class="lang-box">
+                  <div class="lang-header">
+                    <span>🇯🇵</span> <span>日本語 (Japanese)</span>
+                  </div>
+                  <div class="lang-level">Business Ready (JLPT N2 수준)</div>
+                  <div class="lang-detail">현지 기술 미팅, 개발 명세서 독해 및 비즈니스 회화 가능 (N1 대비 중)</div>
+                </div>
+              </div>
+
+              <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; border-top: 1px solid var(--border-subtle); padding-top: 14px;">
+                📍 <strong>선호 포지션:</strong> Embedded Software Engineer, Firmware Developer, IoT System Architect, Hardware/Software Integration Specialist
+              </div>
+            </div>
+
+            <!-- Right Card: Contact Details & Dispatch Simulator -->
+            <div class="contact-form-card reveal-item delay-2">
+              <h3 style="font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 16px; color: var(--text-primary);">
+                Direct Contact Channels
+              </h3>
+
+              <div class="contact-channels">
+                <a href="mailto:joo.jeonghoon.eng@gmail.com" class="contact-item">
+                  <div class="c-icon">✉️</div>
+                  <div>
+                    <div class="c-label">EMAIL ADDRESS</div>
+                    <div class="c-val">joo.jeonghoon.eng@gmail.com</div>
+                  </div>
+                </a>
+
+                <div class="contact-item">
+                  <div class="c-icon">🏛️</div>
+                  <div>
+                    <div class="c-label">AFFILIATION</div>
+                    <div class="c-val">경성대학교 전자공학과 (2027년 졸업 예정)</div>
+                  </div>
+                </div>
+
+                <div class="contact-item">
+                  <div class="c-icon">📍</div>
+                  <div>
+                    <div class="c-label">LOCATION &amp; DISPATCH TARGET</div>
+                    <div class="c-val">Busan, South Korea ⇄ Tokyo, Japan (Relocation Ready)</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Dispatch Form Simulator -->
+              <div class="mockup-message-box">
+                <form id="quickMessageForm">
+                  <div class="input-group">
+                    <label class="input-label" for="senderName">NAME / COMPANY</label>
+                    <input type="text" id="senderName" class="form-input" placeholder="e.g. Recruit Manager / Tech Lead" required>
+                  </div>
+                  <div class="input-group">
+                    <label class="input-label" for="senderEmail">EMAIL / CONTACT</label>
+                    <input type="email" id="senderEmail" class="form-input" placeholder="e.g. contact@company.co.jp" required>
+                  </div>
+                  <div class="input-group">
+                    <label class="input-label" for="senderMsg">MESSAGE</label>
+                    <textarea id="senderMsg" class="form-textarea" placeholder="Send an inquiry, position opening, or interview request..." required></textarea>
+                  </div>
+                  <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 8px;">
+                    <span>⚡ Dispatch Message to Joo Jeonghoon</span>
+                  </button>
+                  <p id="formFeedback" style="display: none; font-size: 0.8rem; color: var(--neon-mint); margin-top: 10px; text-align: center;"></p>
+                </form>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       Slide Navigation Controls (Fixed Bottom Bar)
+       ======================================================================== -->
+  <div class="slide-controls" role="toolbar" aria-label="Slide Controls">
+    <div class="controls-left">
+      <div class="progress-indicator">
+        <div class="progress-dots" role="tablist">
+          <span class="dot active" data-slide="0" role="tab" aria-label="Slide 1: Home"></span>
+          <span class="dot" data-slide="1" role="tab" aria-label="Slide 2: About"></span>
+          <span class="dot" data-slide="2" role="tab" aria-label="Slide 3: Skills"></span>
+          <span class="dot" data-slide="3" role="tab" aria-label="Slide 4: Projects"></span>
+          <span class="dot" data-slide="4" role="tab" aria-label="Slide 5: Timeline"></span>
+          <span class="dot" data-slide="5" role="tab" aria-label="Slide 6: Contact"></span>
+        </div>
+        <div class="slide-counter">
+          <span class="current-num" id="slideCounterCurrent">01</span> / 06
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-right">
+      <div class="nav-buttons-group">
+        <span class="keyboard-hint">[ ← / → Keys ]</span>
+        <button type="button" class="arrow-btn" id="prevBtn" aria-label="Previous Section" disabled>‹</button>
+        <button type="button" class="arrow-btn" id="nextBtn" aria-label="Next Section">›</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core JavaScript -->
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
